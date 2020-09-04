@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 const Home: React.FC = () => {
+
   const [values, setValues] = useState({
     meal_name1: "",
     meal_name2: "",
@@ -11,11 +12,20 @@ const Home: React.FC = () => {
   });
 
   return (
-    <div>
+    <div  >
       <h1>Post Page</h1>
-      <input />
-      <textarea />
-      <button>投稿</button>
+      <form>
+        <div>
+          <select >
+            <option>餃子</option>
+            <option>カレー</option>
+          </select>
+        </div>
+        <textarea />
+        <div>
+          <button>投稿</button>
+        </div>
+      </form>
     </div>
   )
 }
