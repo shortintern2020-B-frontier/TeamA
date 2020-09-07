@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 
 const Home: React.FC = () => {
 
   return (
-    <div>Home画面</div>
+    <h3>Home画面</h3>
   )
 }
 

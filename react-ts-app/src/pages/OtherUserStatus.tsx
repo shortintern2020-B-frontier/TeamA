@@ -3,7 +3,7 @@ import React from "react";
 const OtherUserStatus: React.FC = () => {
 
   return (
-    <div>other user status</div>
+    <h3>other user status</h3>
   )
 }
 
