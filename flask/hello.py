@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import boto3  #AWS SDK for Python
-from models.models import *
+
 from models.database import db_session
 import datetime
 
@@ -64,7 +64,7 @@ def upload():
         #日付、日時を取ってくるget_date,created_at
         dt_now = datetime.datetime.now()
         get_date=dt_now.strftime('%Y/%m/%d')
-        created_at=dt_now.strftime('%Y/%m/%d')
+        created_at=dt_now.strftime('%Y年%m月%d日 %H:%M:%S')
         #meal_nameからpointをとってくる
         point1 = Meal_content.query.filter(Meal_content.name==meal_name).all()[0].point
         point2 = Meal_content.query.filter(Meal_content.name==meal_name2).all()[0].point
@@ -87,18 +87,23 @@ def upload():
         add_data(Cook_history(meal_id4,user_id))
         add_data(Cook_history(meal_id5,user_id))
         #point_userにuser_id(1固定),point,get_date追記
-        add_data(Cook_history(meal_id3,user_id))
+        add_data(Point_user(1,point,get_date))
         #URL生成
         image_url="https://s3-ap-northeast-1.amazonaws.com/rakuten.intern2020/img/{}".format(file_name)
         #postにuser_id,meal_id{1,2,3,4,5},image_url,post_comment,recipe_url追記
         add_data(Post(user_id, meal_id1 , meal_id2 , meal_id3 , meal_id4 , meal_id5 , image_url , post_comment, recipe_url,created_at))
 
+@app.route('/post',methods=['GET'])
+@cross_origin()
     # niimi
+    # 関数の役割：バッチを付与するか判定する
     # 引数：user_id、meal_id
     # 返り値：meal_name, badge_level
     def judge_badges(user,meal):
-        user=1 #仮 user_id
-        meal=2 #仮 meal_id
+        user = request.args.get("user_id")
+        meal = request.args.get("meal_id")
+        user = 1 #仮 user_id
+        meal = 2 #仮 meal_id
         # 料理nameを取得　meal_name
         meal_content = Meal_content.query.filter(Meal_content.meal_id==meal).all()
         meal_name = meal_content[0].name
@@ -113,22 +118,26 @@ def upload():
         # badge_level 1 バッチ1個(仮)
         if meal_count==0:
             badge_level+=1
+            change_total_budge()
         # badge_level 2　バッチ5個(仮)
         elif meal_count == 4:
             badge_level+=1
+            change_total_budge()
         # # badge_level 3　バッチ10個(仮)
         elif meal_count >= 10:
             badge_level+=1
+            change_total_budge()
         else:
             pass
-        #Userテーブルのtotal_budgeを変更
-        user_table = User.query.filter(User.user_id==user).first()
-        user_table.total_budge = 
-        db_session.commit()
-        
-        # def change_(user,meal):
+        return jsonify({'meal_name': meal_name,'badge_level': badge_level})
 
-        
+        #Userテーブルのtotal_badgeを変更
+        def change_total_badge():
+            user_table = User.query.filter(User.user_id==user).first()
+            user_table.total_budge += 1
+            db_session.commit()
+
+
 
 # masui
 @app.route('/mypage', methods=['GET'])
@@ -155,15 +164,15 @@ def mypage_json():
     n_badge = User.query.filter(User.user_id==user_id).first().total_badges
     n_point = User.query.filter(User.user_id==user_id).first().total_points
 
-    user_dic = {
-        'post_id': posts,       # [{'post_id':post_id,'image_url':image_url},{},...]
-        'followers': n_flwer,   # userのフォロワー数: int
-        'followees': n_flwee,   # userのフォロー数: int
-        'total_badge': n_badge, # userの獲得バッジ数: int
-        'total_point': n_point  # userの獲得ポイント数: int
-    }
+    # user_dic = {
+    #     'post_id': posts,       # [{'post_id':post_id,'image_url':image_url},{},...]
+    #     'followers': n_flwer,   # userのフォロワー数: int
+    #     'followees': n_flwee,   # userのフォロー数: int
+    #     'total_badge': n_badge, # userの獲得バッジ数: int
+    #     'total_point': n_point  # userの獲得ポイント数: int
+    # }
 
-    return jsonify(user_dic)
+    return jsonify(post_id=posts, follwers=n_flwer, followees=n_flwee, total_badge=n_badge, total_point=n_point)
 
 # # ステータスページ (stage2-4でした。。)
 # @app.route('/status', methods=['GET'])
@@ -183,18 +192,21 @@ def mypage_json():
 # kajiura
 def world_total_badge_ranking_json():
     # とりあえず全ユーザー送る
+    # total_badgesの降順でソート
     users = db_session.query(User.user_id, User.name, User.total_badges, User.total_points).all().sort(key=lambda x: x[2], reverse=True)
     user_lists = []
     for user in users:
         user_id, name, total_badges, total_points = user
-        user_dic = {
-            'user_id': user_id,
-            'name': name,
-            'total_badge': total_badges,
-            'total_point': total_points,
-        }
-        user_lists.append(user_dic)
-    return jsonify(user_lists)
+        # user_dic = {
+        #     'user_id': user_id,
+        #     'name': name,
+        #     'total_badge': total_badges,
+        #     'total_point': total_points,
+        # }
+
+        #  [{user_id, name, total_badge, total_point}, {user_id, name, total_badge, total_point}, {…}]のようにレスポンス
+        user_lists.append(jsonify(user_id=user_id, name=name, total_badge=total_badges, total_point=total_points))
+    return user_lists
 
 
 @app.route('/test', methods=['GET'])
@@ -205,7 +217,7 @@ def get_json_from_dictionary():
         'recipe': 'recipe'
     }
     return jsonify(test_dic)
-    
+
 ## おまじない
 if __name__ == "__main__":
     app.run(debug=True)
