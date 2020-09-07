@@ -23,23 +23,17 @@ export const createTest = async () => {
   return await toJson(resp);
 };
 
-export const signup = async (jwtToken: string, body: any) => {
+export const signup = async (body: any) => {
   const resp = await fetch(`${baseUrl}/signup`, {
     method: "POST",
-    headers: new Headers({
-      Authorization: `Bearer ${jwtToken}`,
-    }),
     body: JSON.stringify(body),
   });
   return await toJson(resp);
 }
 
-export const login = async (jwtToken: string, body: any) => {
+export const login = async (body: any) => {
   const resp = await fetch(`${baseUrl}/login`, {
     method: "POST",
-    headers: new Headers({
-      Authorization: `Bearer ${jwtToken}`,
-    }),
     body: JSON.stringify(body),
   });
   return await toJson(resp);
@@ -55,12 +49,12 @@ export const getTimeline = async (jwtToken: string, body: any) => {
   return await toJson(resp);
 }
 
-export const getMyUserInfo = async (jwtToken: string, body: any) => {
+export const getMyUserInfo = async () => {
   const resp = await fetch(`${baseUrl}/mypage`, {
     method: "GET",
-    headers: new Headers({
-      Authorization: `Bearer ${jwtToken}`,
-    })
+    // headers: new Headers({
+    //   Authorization: `Bearer ${jwtToken}`,
+    // })
   });
   return await toJson(resp);
 }
@@ -86,24 +80,22 @@ export const createPost = async (jwtToken: string, body: any) => {
   return await toJson(resp);
 };
 
-export const getMyRanking = async (jwtToken: string, body: any) => {
+export const getMyRanking = async (jwtToken: string) => {
   const resp = await fetch(`${baseUrl}/ranking`, {
     method: "GET",
     headers: new Headers({
       Authorization: `Bearer ${jwtToken}`,
     }),
-    body: JSON.stringify(body),
   });
   return await toJson(resp);
 }
 
-export const getMyStatus = async (jwtToken: string, body: any) => {
+export const getMyStatus = async (jwtToken: string) => {
   const resp = await fetch(`${baseUrl}/status`, {
     method: "GET",
     headers: new Headers({
       Authorization: `Bearer ${jwtToken}`,
     }),
-    body: JSON.stringify(body),
   });
   return await toJson(resp);
 }
