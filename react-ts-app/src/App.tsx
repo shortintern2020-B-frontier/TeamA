@@ -1,13 +1,41 @@
 import React from 'react';
-// import Home from "./pages/Home"
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+
+import Header from "./components/Header"
+import Home from "./pages/Home"
 import Post from "./pages/Post"
+import MyPage from "./pages/MyPage"
+import MyStatus from "./pages/MyStatus"
+import OtherUser from "./pages/OtherUser"
+import OtherUserStatus from "./pages/OtherUserStatus"
+import Ranking from "./pages/Ranking"
+import Timeline from "./pages/Timeline"
+import UserRelation from "./pages/UserRelation"
+import NotFound from "./pages/NotFound"
 
 const App: React.FC = () => {
   return (
-    <div>
-      {/* <Home /> */}
-      <Post />
-    </div>
+    <>
+      <Router>
+        <Header />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/mypage" component={MyPage} />
+          <Route exact path="/mystatus" component={MyStatus} />
+          <Route exact path="/ranking" component={Ranking} />
+          <Route exact path="/timeline" component={Timeline} />
+          <Route exact path="/ff" component={UserRelation} />
+          <Route exact path="/post" component={Post} />
+          <Route exact path="/:user_id/mypage" component={OtherUser} />
+          <Route exact path="/:user_id/status" component={OtherUserStatus} />
+          <Route component={NotFound} />
+        </Switch>
+      </Router>
+    </>
   );
 }
 

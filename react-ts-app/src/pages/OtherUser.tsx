@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { getMyUserInfo } from "./../api"
+import React, { useState } from "react";
 
 const mockUserInfo = {
   post: [
@@ -25,22 +24,12 @@ interface State {
   total_point: number
 }
 
-const Home: React.FC = () => {
+const OtherUser: React.FC = () => {
   const [userInfo, setUserInfo] = useState<State>()
-  console.log(userInfo);
-
-  useEffect(() => {
-    const f = async () => {
-      const res = await getMyUserInfo()
-      console.log(res);
-      setUserInfo(res)
-    }
-    f()
-  })
 
   return (
     <>
-      <h3>My Photo Page</h3>
+      <h3>other user page</h3>
       <p>フォロー数：{mockUserInfo.followees}</p>
       <p>フォロワー数：{mockUserInfo.follower}</p>
       <p>トータルバッチ：{mockUserInfo.total_badge}</p>
@@ -54,4 +43,4 @@ const Home: React.FC = () => {
   )
 }
 
-export default Home;
+export default OtherUser;
