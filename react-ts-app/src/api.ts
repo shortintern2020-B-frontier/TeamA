@@ -1,6 +1,11 @@
+const baseUrl = `http://localhost:5000`
+
 const toJson = async (res: Response) => {
-  if (res.status == 404) {
-    return "NotFound";
+  if (res.status === 404) {
+    return { msg: "Not Found" }
+  }
+  if (res.status >= 500) {
+    return { msg: 'Internal Server Error' }
   }
   const js = await res.json();
   if (res.ok) {
@@ -10,11 +15,117 @@ const toJson = async (res: Response) => {
   }
 };
 
+// test
+export const createTest = async () => {
+  const resp = await fetch(`${baseUrl}/test`, {
+    method: "GET",
+  });
+  return await toJson(resp);
+};
 
-export const createPost = async (body: any) => {
-  const resp = await fetch(`localhost:5000/owner`, {
+export const signup = async (jwtToken: string, body: any) => {
+  const resp = await fetch(`${baseUrl}/signup`, {
     method: "POST",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    }),
+    body: JSON.stringify(body),
+  });
+  return await toJson(resp);
+}
+
+export const login = async (jwtToken: string, body: any) => {
+  const resp = await fetch(`${baseUrl}/login`, {
+    method: "POST",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    }),
+    body: JSON.stringify(body),
+  });
+  return await toJson(resp);
+}
+
+export const getTimeline = async (jwtToken: string, body: any) => {
+  const resp = await fetch(`${baseUrl}/timeline`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    })
+  });
+  return await toJson(resp);
+}
+
+export const getMyUserInfo = async (jwtToken: string, body: any) => {
+  const resp = await fetch(`${baseUrl}/mypage`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    })
+  });
+  return await toJson(resp);
+}
+
+export const getMyRelation = async (jwtToken: string, body: any) => {
+  const resp = await fetch(`${baseUrl}/relation`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    })
+  });
+  return await toJson(resp);
+}
+
+export const createPost = async (jwtToken: string, body: any) => {
+  const resp = await fetch(`${baseUrl}/post`, {
+    method: "POST",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    }),
     body: JSON.stringify(body),
   });
   return await toJson(resp);
 };
+
+export const getMyRanking = async (jwtToken: string, body: any) => {
+  const resp = await fetch(`${baseUrl}/ranking`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    }),
+    body: JSON.stringify(body),
+  });
+  return await toJson(resp);
+}
+
+export const getMyStatus = async (jwtToken: string, body: any) => {
+  const resp = await fetch(`${baseUrl}/status`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    }),
+    body: JSON.stringify(body),
+  });
+  return await toJson(resp);
+}
+
+export const getOtherPage = async (jwtToken: string, user_id: string, body: any) => {
+  const resp = await fetch(`${baseUrl}/${user_id}/mypage`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    }),
+    body: JSON.stringify(body),
+  });
+  return await toJson(resp);
+}
+
+export const getOtherStatus = async (jwtToken: string, user_id: string, body: any) => {
+  const resp = await fetch(`${baseUrl}/${user_id}/status`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    }),
+    body: JSON.stringify(body),
+  });
+  return await toJson(resp);
+}
