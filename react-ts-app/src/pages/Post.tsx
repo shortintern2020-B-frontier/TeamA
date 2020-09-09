@@ -1,19 +1,33 @@
 import React, { useState } from "react";
-import { createPost } from "./../api"
+import { useHistory } from "react-router-dom";
 import { TextField, Checkbox, FormControl, FormLabel, FormGroup, FormControlLabel } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
+import Modal from '@material-ui/core/Modal';
+import { createPost, getMealName } from "./../api"
+import { asyncLocalStorage } from "../utils"
 import EarnBadge from "./EarnBadge"
+import ErrorMessage from './../components/ErrorMessage'
 
+interface BadgeType {
+  meal_name: string;
+  badge_level: number;
+}
+
+console.log(getMealName())
 
 const Post: React.FC = () => {
   const [checked, setChecked] = useState<string[]>([]);
   const [img, setImg] = useState<any>();
   const [mealUrl, setMealUrl] = useState("")
   const [comment, setComment] = useState("")
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [badges, setBadges] = useState<BadgeType[]>();
+  const history = useHistory()
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let curPost = {
+    const curPost = {
       meal_name1: checked[0] ? checked[0] : "",
       meal_name2: checked[1] ? checked[1] : "",
       meal_name3: checked[2] ? checked[2] : "",
@@ -21,30 +35,44 @@ const Post: React.FC = () => {
       meal_name5: checked[4] ? checked[4] : "",
       image: img,
       meal_url: mealUrl,
-      comment: comment
+      post_comment: comment
     }
-    let res = await createPost("jwt", curPost);
+
+    const jwtToken: any = await asyncLocalStorage.getItem("access_token").catch(err => console.log(err))
+    await createPost(jwtToken, curPost)
+      .then(res => {
+        const badges = res.get_badges;
+        console.log(badges)
+        if (badges === []) {
+          history.push("/")
+        } else {
+          setBadges(badges);
+          setIsOpen(true)
+        }
+      })
+      .catch(err => { setErrorMessage(err.message) })
   }
 
 
 
-  const handleCheck = (mealName: string) => {
+  const handleCheck = (meal_name: string) => {
     let newChecked;
 
-    if (checked.indexOf(mealName) >= 0) {
-      newChecked = checked.filter(item => item !== mealName)
+    if (checked.indexOf(meal_name) >= 0) {
+      newChecked = checked.filter(item => item !== meal_name)
     } else {
-      newChecked = [...checked, mealName];
+      newChecked = [...checked, meal_name];
     }
     setChecked(newChecked);
   }
 
-  const testProps = [{ mealName: "test", badgeLevel: 2 }];
+  const testProps = [{ meal_name: "test", badge_level: 2 }];
+
 
   return (
     <div  >
-      <EarnBadge earnedBadges={testProps} />
-      {/* <h1>Post Page</h1>
+      <ErrorMessage message={errorMessage} />
+      <h3>Post Page</h3>
       <form onSubmit={onSubmit}>
         <div>
           <FormControl required>
@@ -69,35 +97,30 @@ const Post: React.FC = () => {
         <TextField value={mealUrl} onChange={e => setMealUrl(e.target.value)} label="参考にしたレシピのURL（任意）" variant="outlined" />
         <div>
           画像ファイルを選択してください
-          <input required type="file" onChange={e => {
+          <input type="file" onChange={e => {
             let file = e.target.files![0];
-            setImg(file)
-            // let reader: FileReader = new FileReader();
-            // reader.readAsDataURL(file);
-            // reader.onload = () => {
-            //   setImg(reader.result);
-            // };
+            let reader: FileReader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+              setImg(reader.result);
+            };
           }} accept="image/*" />
         </div>
         <div>
           <button ><SendIcon /></button>
         </div>
-      </form> */}
+      </form>
+      <Modal
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <EarnBadge earnedBadges={badges} />
+      </Modal>
+      <button onClick={() => setIsOpen(!isOpen)}>a</button>
     </div >
   )
-
-
-
-
-
-
-
-  // return (
-  //   <div>
-  //     <button onClick={getMeal}>Test</button>
-  //     {res && res.cuisine}
-  //   </div>
-  // )
 }
 
 export default Post;

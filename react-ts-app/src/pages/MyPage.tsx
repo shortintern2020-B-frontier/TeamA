@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { getMyUserInfo } from "./../api"
+import { makeStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router-dom";
 
-const mockUserInfo = {
-  post: [
-    { post_id: 1, image_url: "https://images.unsplash.com/photo-1599335937498-90b82b84d603?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" },
-    { post_id: 2, image_url: "https://images.unsplash.com/photo-1599335937498-90b82b84d603?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" }
-  ],
-  follower: 2,
-  followees: 3,
-  total_badge: 12,
-  total_point: 34
-}
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import LogoutButton from '../components/LogoutButton'
+import { getMyUserInfo } from "./../api"
+import ErrorMessage from './../components/ErrorMessage'
+import { asyncLocalStorage } from '../utils'
+
+// const Image = require('react-image-resizer/Image')
+// import Image from 'react-image-resizer';
+
 
 interface Post {
   post_id: number
@@ -18,40 +19,77 @@ interface Post {
 }
 
 interface State {
-  post: Post[]
-  follewers: number
+  post_id: Post[]
+  followers: number
   followees: number
   total_badge: number
   total_point: number
 }
 
+const useStyles = makeStyles({
+  image: {
+    width: "160px",
+    height: "160px",
+    objectFit: "cover"
+  }
+})
+
 const Home: React.FC = () => {
   const [userInfo, setUserInfo] = useState<State>()
-  console.log(userInfo);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const classes = useStyles()
+  const history = useHistory();
 
   useEffect(() => {
     const f = async () => {
-      const res = await getMyUserInfo()
-      console.log(res);
-      setUserInfo(res)
+      const jwtToken = await asyncLocalStorage.getItem('access_token')
+      console.log(jwtToken);
+      await getMyUserInfo(jwtToken)
+        .then(res => {
+          setUserInfo(res)
+        })
+        .catch(err => {
+          setErrorMessage(err.message)
+        })
     }
     f()
-  })
+  }, [])
+
+  const onClick = () => {
+    asyncLocalStorage.removeItem('access_token')
+    history.push('/')
+  }
 
   return (
     <>
+      <ErrorMessage message={errorMessage} />
       <h3>My Photo Page</h3>
-      <p>フォロー数：{mockUserInfo.followees}</p>
-      <p>フォロワー数：{mockUserInfo.follower}</p>
-      <p>トータルバッチ：{mockUserInfo.total_badge}</p>
-      <p>トータルポイント：{mockUserInfo.total_point}</p>
-      {mockUserInfo.post.map((p) => {
-        return (
-          <img src={p.image_url} alt="icon"></img>
-        )
-      })}
+      {userInfo ? (
+        <div>
+          <p>フォロー数：{userInfo.followees}</p>
+          <p>フォロワー数：{userInfo.followers}</p>
+          <p>トータルバッチ：{userInfo.total_badge}</p>
+          <p>トータルポイント：{userInfo.total_point}</p>
+        </div>
+      )
+        :
+        <p>読み込み中</p>}
+      <GridList cellHeight={160} cols={2}>
+        {userInfo ?
+          userInfo.post_id.map((item) => {
+            return (
+              <GridListTile key={item.post_id} cols={1}>
+                <img className={classes.image} src={item.image_url} alt="dish"></img>
+              </GridListTile>
+            );
+          })
+          : <p>読み込み中</p>
+        }
+      </GridList>
+      <LogoutButton onClick={onClick} />
     </>
   )
 }
 
 export default Home;
+

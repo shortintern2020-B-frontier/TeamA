@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 // import LensIcon from '@material-ui/icons/Lens';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -6,21 +7,21 @@ import Typography from '@material-ui/core/Typography';
 import CardMedia from '@material-ui/core/CardMedia';
 
 interface BadgeType {
-  mealName: string;
-  badgeLevel: number;
+  meal_name: string;
+  badge_level: number;
 }
 
-const BadgeComponent: React.FC<BadgeType> = (props) => {
+const BadgeComponent: React.FC<BadgeType | undefined> = (props) => {
   return (
     <Card>
       <CardContent>
         <CardMedia
-          title={props.mealName}
+          title={props.meal_name}
           component="img"
           src="https://illust8.com/wp-content/uploads/2018/07/medal_ribbon_gold_illust_528.png"
         />
-        <Typography>料理名：{props.mealName}</Typography>
-        <Typography>バッチレベル：{props.badgeLevel}</Typography>
+        <Typography>料理名：{props.meal_name}</Typography>
+        <Typography>バッチレベル：{props.badge_level}</Typography>
       </CardContent>
     </Card>
   )
@@ -31,11 +32,18 @@ const BadgeComponent: React.FC<BadgeType> = (props) => {
 
 
 interface Props {
-  earnedBadges: BadgeType[];
+  earnedBadges: BadgeType[] | undefined;
 }
 
 const EarnBadge: React.FC<Props> = (props) => {
-  return (<BadgeComponent mealName={props.earnedBadges[0].mealName} badgeLevel={props.earnedBadges[0].badgeLevel} />)
+  const createBadges = () => props.earnedBadges ? props.earnedBadges.map(
+    item => <BadgeComponent meal_name={item.meal_name} badge_level={item.badge_level} />
+  ) : null;
+  return <div>{createBadges()}</div>
 }
 
 export default EarnBadge;
+
+// export default function App() {
+//   return <div></div>
+// }

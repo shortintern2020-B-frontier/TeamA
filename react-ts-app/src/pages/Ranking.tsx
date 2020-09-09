@@ -1,45 +1,62 @@
 import React, { useEffect, useState } from "react";
-import { getMyRanking } from "./../api"
 
-const mockRankData = [
-  { user_id: 1, name: "oomura", total_badge: 200, total_point: 32 },
-  { user_id: 2, name: "kudo", total_badge: 23, total_point: 1 }
-]
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
 
-interface State {
+import { asyncLocalStorage } from '../utils'
+import { getTotalBadgeRanking, getTotalMealRanking } from "./../api"
+import ErrorMessage from './../components/ErrorMessage'
+import BadgeRankerList from "../components/BadgeRankerLists"
+import MealLists from "../components/MealLists"
+
+interface BadgeRank {
   user_id: number
   name: string
-  total_badge: number
-  total_point: number
+  badge: number
+  point: number
+}
+
+interface MealRank {
+  meal_id: number
+  meal_name: string
+  count: number
 }
 
 const Home: React.FC = () => {
-  const [rankData, setRankData] = useState<State[]>([]);
+  const [badgeList, setBadgeList] = useState<BadgeRank[]>([]);
+  const [mealList, setMealList] = useState<MealRank[]>([])
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const f = async () => {
-      const res = await getMyRanking('jwt')
-      console.log(res);
-      setRankData(res)
-    }
+      const jwtToken = await asyncLocalStorage.getItem('access_token')
+      await getTotalBadgeRanking(jwtToken)
+        .then(r => {
+          setBadgeList(r.results)
+        })
+        .catch((err) => {
+          setErrorMessage(err.message);
+        });
+      await getTotalMealRanking(jwtToken)
+        .then(r => {
+          setMealList(r.results)
+        })
+        .catch(err => {
+          setErrorMessage(err.message)
+        })
+    };
     f()
-  })
+  }, [])
 
   return (
-    <>
-      <h3>Ranking Page</h3>
-      {
-        mockRankData.map((data) => {
-          return (
-            <ul>
-              <li>{data.name}</li>
-              <li>{data.total_badge}</li>
-              <li>{data.total_point}</li>
-            </ul>
-          )
-        })
-      }
-    </>
+    <Container component="main" maxWidth="xs">
+      <Typography component="h3" variant="h5">Ranking</Typography>
+      <ErrorMessage message={errorMessage} />
+      <Typography component="h4" variant="h6">Total Badge Ranking</Typography>
+      {badgeList[0] ? <BadgeRankerList badgeList={badgeList} /> : <p>読み込み中</p>}
+      <Typography component="h4" variant="h6">Meal Ranking</Typography>
+      {mealList[0] ? <MealLists mealLists={mealList} /> : <p>読み込み中</p>}
+    </Container>
   )
 }
 
