@@ -14,7 +14,7 @@ class User(Base):
     total_badges = Column(Integer)
     total_points = Column(Integer)
 
-    def __init__(self, email=None, name=None, password=None, total_badges=None, total_points=None):
+    def __init__(self, email=None,name=None,password=None,total_badges=None,total_points=None):
         self.email = email
         self.name = name
         self.password = password
@@ -48,13 +48,13 @@ class Cook_history(Base):
     user_id = Column(Integer)
     post_id = Column(Integer)
 
-    def __init__(self, meal_id=None, user_id=None, post_id=None):
+    def __init__(self, meal_id=None,user_id=None):
         self.meal_id = meal_id
         self.user_id = user_id
         self.post_id = post_id
 
     def __repr__(self):
-        return "Cook_history<{}, {}, {}, {}>".format(self.cook_history_id, self.meal_id, self.user_id, self.post_id)
+        return "Cook_history<{}, {}, {}>".format(self.cook_history_id, self.meal_id, self.user_id)
 
 
 # kajiura
@@ -65,13 +65,13 @@ class Point_user(Base):
     point = Column(Integer)
     get_date = Column(String)
 
-    def __init__(self, user_id=None, point=None, get_date=None):
+    def __init__(self, user_id=None,point=None,get_date=None):
         self.user_id=user_id
         self.point=point
         self.get_date=get_date
 
     def __repr__(self):
-        return "Point_user<{}, {}, {}, {}>".format(self.point_user_id, self.user_id, self.point, self.get_date)
+        return "Point_user<{}, {}, {}>".format(self.point_user_id, self.user_id, self.point, self.get_date)
 
 
 # kajiura
@@ -89,7 +89,7 @@ class Post(Base):
     post_comment = Column(String)
     create_at = Column(String)
 
-    def __init__(self, user_id=None, meal_id1=None, meal_id2=None, meal_id3=None, meal_id4=None, meal_id5=None, image_url=None, recipe_url=None, post_comment=None, create_at=None):
+    def __init__(self, user_id=None,meal_id1=None,meal_id2=None,meal_id3=None,meal_id4=None,meal_id5=None,image_url=None,recipe_url=None,post_comment=None,create_at=None):
         self.user_id = user_id
         self.meal_id1 = meal_id1
         self.meal_id2 = meal_id2
@@ -102,7 +102,7 @@ class Post(Base):
         self.create_at = create_at
 
     def __repr__(self):
-        return "Post<{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>".format(self.post_id, self.user_id, self.meal_id1, self.meal_id2, self.meal_id3, self.meal_id4, self.meal_id5, self.image_url, self.recipe_url, self.post_comment, self.create_at)
+        return "Post<{}, {}, {}, {}, {}, {}>".format(self.post_id, self.user_id, self.meal_id1, self.meal_id2, self.meal_id3, self.meal_id4, self.meal_id5, self.image_url, self.recipe_url, self.post_comment, self.create_at)
 
 
 # kajiura
@@ -117,23 +117,8 @@ class User_relation(Base):
         self.followed_id = followed_id
 
     def __repr__(self):
-        return "User_relation<{}, {}, {}>".format(self.user_relation_id, self.follower_id, self.followed_id)
+        return "User_relation<{}, {}>".format(self.user_relation_id, self.follower_id, self.followed_id)
 
-# kajiura
-class Badges(Base):
-    __tablename__ = 'badges'
-    badges_id = Column(Integer, primary_key=True)
-    user_id = Column(Integer)
-    meal_id = Column(Integer)
-    level = Column(Integer)
-
-    def __init__(self, user_id=None, meal_id=None, level=None):
-        self.user_id = user_id
-        self.meal_id = meal_id
-        self.level = level
-
-    def __repr__(self):
-        return "Badges<{}, {}, {}>".format(self.user_id, self.meal_id, self.level)
 
 # sqliteから以下でテーブル作成
 # create table User(user_id integer primary key autoincrement, name string);
