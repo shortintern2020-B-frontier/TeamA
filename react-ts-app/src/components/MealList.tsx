@@ -1,5 +1,8 @@
 import React from 'react';
 
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+
 interface Props {
   meal_id: number
   meal_name: string
@@ -10,10 +13,10 @@ const MealList: React.FC<Props> = (props) => {
   const { meal_id, meal_name, count } = props;
 
   return (
-    <ul key={meal_id}>
-      <li>料理名：{meal_name}</li>
-      <li>回数：{count}</li>
-    </ul>
+    <TableRow key={meal_id}>
+      <TableCell>{meal_name}</TableCell>
+      <TableCell>{count}</TableCell>
+    </TableRow>
   )
 }
 

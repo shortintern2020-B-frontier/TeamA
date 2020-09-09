@@ -1,5 +1,9 @@
 import React from 'react';
-import { useLocation, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
+import Link from '@material-ui/core/Link';
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
 
 interface Props {
   user_id: number
@@ -10,22 +14,21 @@ interface Props {
 
 const BadgeRanker: React.FC<Props> = (props) => {
   const { user_id, name, total_badge, total_point } = props;
-  const path = useLocation().pathname;
   const history = useHistory();
 
   const onClick = () => {
     const path = user_id + '/mypage'
-    console.log(path)
     history.push(path);
   };
 
   return (
-    <ul key={user_id}>
-      <li>名前：{name}</li>
-      <li>バッジ数：{total_badge}</li>
-      <li>ポイント：{total_point}</li>
-      <button onClick={onClick}>User Page</button>
-    </ul>
+    <TableRow key={user_id}>
+      <TableCell>
+        <Link href="" onClick={onClick}>{name}</Link>
+      </TableCell>
+      <TableCell>{total_badge}</TableCell>
+      <TableCell>{total_point}</TableCell>
+    </TableRow>
   )
 }
 

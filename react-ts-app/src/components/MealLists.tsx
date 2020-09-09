@@ -1,5 +1,11 @@
 import React from 'react';
 
+import Table from "@material-ui/core/Table";
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from '@material-ui/core/TableCell';
+
 import MealList from "./MealList"
 
 interface List {
@@ -20,7 +26,15 @@ const MealLists: React.FC<Props> = (props) => {
     )
   })
   return (
-    <section>{List}</section>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>料理名</TableCell>
+          <TableCell>回数</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>{List}</TableBody>
+    </Table>
   )
 }
 
