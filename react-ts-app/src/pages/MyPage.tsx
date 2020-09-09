@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 
+import { makeStyles } from "@material-ui/core/styles";
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import LogoutButton from '../components/LogoutButton'
+
+
 import { getMyUserInfo } from "./../api"
-import ErrorMessage from './../components/ErrorMessage'
 import { asyncLocalStorage } from '../utils'
+import LogoutButton from '../components/LogoutButton'
+import ErrorMessage from './../components/ErrorMessage'
+import PhotoDisplay from '../components/PhotoDisplay'
 
 // const Image = require('react-image-resizer/Image')
 // import Image from 'react-image-resizer';
@@ -76,13 +79,7 @@ const Home: React.FC = () => {
         <p>読み込み中</p>}
       <GridList cellHeight={160} cols={2}>
         {userInfo ?
-          userInfo.post_id.map((item) => {
-            return (
-              <GridListTile key={item.post_id} cols={1}>
-                <img className={classes.image} src={item.image_url} alt="dish"></img>
-              </GridListTile>
-            );
-          })
+          <PhotoDisplay post_id={userInfo.post_id} />
           : <p>読み込み中</p>
         }
       </GridList>

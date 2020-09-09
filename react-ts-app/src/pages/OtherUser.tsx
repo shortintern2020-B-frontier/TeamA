@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
+import MDSpinner from 'react-md-spinner';
 
 import { asyncLocalStorage } from "../utils"
 import { getOtherPage } from "./../api"
 import ErrorMessage from './../components/ErrorMessage'
+import PhotoDisplay from '../components/PhotoDisplay'
+import Container from '@material-ui/core/Container';
 
 const mockUserInfo = {
   post: [
@@ -23,7 +26,7 @@ interface Post {
 }
 
 interface State {
-  post: Post[]
+  post_id: Post[]
   follwers: number
   followees: number
   total_badge: number
@@ -57,8 +60,7 @@ const OtherUser: React.FC = () => {
   }, [])
 
   return (
-    <>
-      <h3>other user page</h3>
+    <Container component="main" maxWidth="xs">
       <ErrorMessage message={errorMessage} />
       {/* <p>フォロー数：{userInfo.follwees}</p>
       <p>フォロワー数：{userInfo.follewers}</p> */}
@@ -69,8 +71,12 @@ const OtherUser: React.FC = () => {
           <p>トータルバッチ：{userInfo.total_badge}</p>
           <p>トータルポイント：{userInfo.total_point}</p>
         </div>
-      ) : <p>読み込み中</p>}
-    </>
+      ) : <MDSpinner size={56} />}
+      {userInfo ?
+        <PhotoDisplay post_id={userInfo.post_id} />
+        : null
+      }
+    </Container>
   )
 }
 
