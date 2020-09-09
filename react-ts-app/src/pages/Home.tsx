@@ -2,20 +2,11 @@ import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import './../css/home.css'
-import { asyncLocalStorage } from './../utils'
+import useLoginRedirect from '../hooks/useLoginRedirect'
 
 const Home: React.FC = () => {
   const history = useHistory();
-
-  useEffect(() => {
-    const f = async () => {
-      const token = await asyncLocalStorage.getItem('access_token')
-      if (token !== '0') {
-        history.push('/timeline')
-      }
-    }
-    f()
-  }, [])
+  useLoginRedirect()
 
   return (
     <>
