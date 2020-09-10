@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bad+Script&family=Baloo+Chettan+2&family=MuseoModerno:wght@300&display=swap');
+ 
+html{
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+} 
+
+body{
+  margin: 0 auto 0 auto;
+  padding: 0px;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+/* ログイン、サインアップ画面 */
+.account{
+  color: #fff;
+}
+
+.form_inside{
+  background-color:#fff;
+  width: 50%;
+  height: auto;
+  border-radius: 5px;
+}
+
+#h3_back{
+  margin: 10px;
+  padding: 60px;
+  /* position: absolute; */
+  color: white;
+  /* font-family: 'Bad Script', cursive; */
+  font-family: 'Bad Script', cursive;
+  font-family: 'Baloo Chettan 2', cursive;
+  font-family: 'MuseoModerno', cursive;
+}
+
+
+p{
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+/* .back_post p{
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+} */
+
+
+/* バック一覧 */
+/* ログイン、サインアウト用 */
+.back {
+  background-image: linear-gradient(
+      rgba(0,0,0,0.6),rgba(0,0,0,0.6)
+  ),url("image/meal.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  text-align: center;
+  color: #fff;
+  background-color: #272424;
+  border-radius: 5px;
+}
+
+/* ランキングページ */
+.back_rank {
+  background-image: linear-gradient(
+      rgba(0,0,0,0.6),rgba(0,0,0,0.6)
+  ),url("image/cake5.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 25vh;
+  text-align: center;
+  color: #fff;
+  background-color: #272424;
+  border-radius: 5px;
+  /* position: relative; */
+}
+
+/* ポストページ */
+.back_post {
+  background-image: linear-gradient(
+      rgba(0,0,0,0.5),rgba(0,0,0,0.5)
+  ),url("image/cook2.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 25vh;
+  text-align: center;
+  color: #fff;
+  background-color: #272424;
+  margin: 10px;
+  border-radius: 5px;
+}
+.post_form{
+  padding: 20px;
+  background-color: #ebe8e8;
+  /* background-color: red; */
+  border-radius: 10px;
+  margin: 5px;
+}
+.post_content{
+  margin: 10px auto 10px auto;
+  /* background-color: red; */
+}
+.post_content p{
+  border-left :solid 5px #f1b987;
+  border-bottom: solid 1px gray;
+  padding: 10px;
+}
+/* 
+.post_content input {
+  position: relative;
+  margin: 8px 0 0 -14px;
+  }
+.post_conteninput::before {
+  content: “添付ファイル：”;
+  position: absolute;
+  background: #fff;
+  width: 110px;
+  height: 26px;
+  line-height: 1.8;
+  text-align: right;
+  } */
+
+/* タイムラインページ */
+.back_timeline{
+  /* background-image: linear-gradient(
+      rgba(0,0,0,0.5),rgba(0,0,0,0.5)
+  ),url("image/cook3.jpg"); */
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 20vh;
+  text-align: center;
+}
+
+#h3_timeline{
+  margin: 10px;
+  padding: 30px;
+  border-bottom: dashed 1px #c9a07f;
+  /* position: absolute; */
+  color: #352a1a;
+  /* font-family: 'Bad Script', cursive; */
+  font-family: 'Bad Script', cursive;
+  font-family: 'Baloo Chettan 2', cursive;
+  font-family: 'MuseoModerno', cursive;
+  border-radius: 5px;
+}
+
+#h3_timeline::first-letter{
+  font-size: 2em;
+  color: #d8a468;
+}
+
+/* マイページ */
+.back_mypage{
+  background-image: linear-gradient(
+      rgba(0,0,0,0.5),rgba(0,0,0,0.5)
+  ),url("image/tomato.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 25vh;
+  text-align: center;
+  color: #fff;
+  background-color: #272424;
+  border-radius: 5px;
+}
+
+/* ステータスページ */
+.back_state{
+  background-image: linear-gradient(
+      rgba(0,0,0,0.5),rgba(0,0,0,0.5)
+  ),url("image/cook4.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 25vh;
+  text-align: center;
+  color: #fff;
+  background-color: #272424;
+  border-radius: 5px;
+}
