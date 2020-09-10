@@ -186,13 +186,13 @@ def user_timeline():
         # Get own posts
         own_posts = Post.query.filter(Post.user_id==user_id).all()
         for o in own_posts:
-            posts.append({'post_id':o.post_id,'user_id':user_id,'image_url':o.image_url,'create_at':o.create_at})
+            posts.append({'post_id':o.post_id,'user_id':user_id,'meal_url':o.recipe_url,'image_url':o.image_url,'create_at':o.create_at})
         # Get followee's posts
         flwee_raw = User_relation.query.filter(User_relation.follower_id==user_id).all()
         for f in flwee_raw:
             f_posts = Post.query.filter(Post.user_id==f.followed_id).all()
             for f_p in f_posts:
-                posts.append({'post_id':f_p.post_id,'user_id':f.followed_id,'image_url':f_p.image_url,'create_at':f_p.create_at})
+                posts.append({'post_id':f_p.post_id,'user_id':f.followed_id,'meal_url':f_p.recipe_url,'image_url':f_p.image_url,'create_at':f_p.create_at})
 
         posts.sort(key=lambda x: x['post_id'], reverse=True)   
 
@@ -212,7 +212,8 @@ def mypage_json():
         posts = []
         post_raw = Post.query.filter(Post.user_id==user_id).all()
         for p in post_raw:
-            posts.append({'post_id':p.post_id,'image_url':p.image_url})
+            posts.append({'post_id':p.post_id,'meal_url':p.recipe_url,'image_url':p.image_url})
+        posts.sort(key=lambda x: x['post_id'], reverse=True)  
         flwer = []
         flwer_raw = User_relation.query.filter(User_relation.followed_id==user_id).all()
         for f in flwer_raw:
@@ -252,7 +253,7 @@ def others_mypage_json(user_id=None):
 
         post_raw = Post.query.filter(Post.user_id==user_id).all()
         for p in post_raw:
-            posts.append({'post_id':p.post_id,'image_url':p.image_url})
+            posts.append({'post_id':p.post_id,'meal_url':p.recipe_url,'image_url':p.image_url})
         flwer = []
         flwer_raw = User_relation.query.filter(User_relation.followed_id==user_id).all()
         for f in flwer_raw:
@@ -281,11 +282,40 @@ def relation_json():
         flwer = []
         flwer_raw = User_relation.query.filter(User_relation.followed_id==user_id).all()
         for f in flwer_raw:
-            flwer.append(f.follower_id)
+            #flwer.append(f.follower_id)
+            user_name = User.query.filter(User.user_id==f.follower_id).first().name
+            flwer.append({'user_id':f.follower_id,'name':user_name})
+            print(flwer)
         flwee = []
         flwee_raw = User_relation.query.filter(User_relation.follower_id==user_id).all()
         for f in flwee_raw:
-            flwee.append(f.followed_id)
+            user_name = User.query.filter(User.user_id==f.followed_id).first().name
+            flwer.append({'user_id':f.followed_id,'name':user_name})
+
+        return jsonify(follower=flwer,followee=flwee)
+    except Exception as e:
+        abort(404, {'code': 'Not found', 'message': str(e)})
+
+# masui
+@app.route('/<user_id>/relation', methods=['GET'])
+@jwt_required
+def other_relation_json():
+    try:
+        user_id = int(user_id)
+        #user_id = 1
+
+        flwer = []
+        flwer_raw = User_relation.query.filter(User_relation.followed_id==user_id).all()
+        for f in flwer_raw:
+            #flwer.append(f.follower_id)
+            user_name = User.query.filter(User.user_id==f.follower_id).first().name
+            flwer.append({'user_id':f.follower_id,'name':user_name})
+            print(flwer)
+        flwee = []
+        flwee_raw = User_relation.query.filter(User_relation.follower_id==user_id).all()
+        for f in flwee_raw:
+            user_name = User.query.filter(User.user_id==f.followed_id).first().name
+            flwer.append({'user_id':f.followed_id,'name':user_name})
 
         return jsonify(follower=flwer,followee=flwee)
     except Exception as e:
@@ -338,11 +368,11 @@ def upload():
         # 料理名
         meal_name=[]
         for i in range(1,6):
-            if payload.get('meal_name{}'.format(i))!=None:
+            if payload.get('meal_name{}'.format(i))!='':
                 meal_name.append(payload.get('meal_name{}'.format(i)))
             else:
                 break
-        recipe_url = payload.get('recipe_url')
+        recipe_url = payload.get('meal_url')
         post_comment = payload.get('post_comment')
 
         #日付、日時を取ってくるget_date,created_at
@@ -360,7 +390,7 @@ def upload():
         total_points=sum(meal_point)
         #postにuser_id,meal_id{1,2,3,4,5},image_url,post_comment,recipe_url追記
         print(meal_id)
-        add_data(Post(user_id, meal_id[0] , meal_id[1] , meal_id[2] , meal_id[3] , meal_id[4] , image_url , post_comment, recipe_url,created_at))
+        add_data(Post(user_id, meal_id[0] , meal_id[1] , meal_id[2] , meal_id[3] , meal_id[4] , image_url , recipe_url , post_comment , created_at))
         # postidを取ってくる
         post_id=Meal_content.query.all()[-1].meal_id
         #cook_historyにmeal_id,user_id,post_id追記
@@ -373,7 +403,7 @@ def upload():
 
         #point_userにuser_id,point,get_date追記
         add_data(Point_user(user_id,total_points,get_date))
-
+        print("バッチ処理開始")
         # return jsonify(status=0, message=''), 200
 
 
@@ -388,7 +418,8 @@ def upload():
             if len(badges_table) == 0:
                 add_data(Badges(user,meal,level))
             else:
-                badges_table.level = level
+                print("level",level)
+                badges_table[0].level = level
             db_session.commit()
         # バッチを付与するか判定
         def  judge_budges(meal_id):
@@ -414,17 +445,21 @@ def upload():
                 change_badges(user_id,meal_id,3)
                 return {'meal_name':meal_name,'badge_level':3}
             else:
-                badge_level=None
-                return {'meal_name':meal_name,'badge_level':badge_level}
+                return {'meal_name':meal_name,'badge_level':None}
                 
         # meal_id_list=[meal_id1,meal_id2,meal_id3,meal_id4,meal_id5]
         post=[]
         for m_id in meal_id:
-            b = judge_budges(m_id)
-            if b['badge_level'] == None:
+            print(m_id) # back確認用
+            if m_id == None:
                 pass
             else:
-                post.append(b)
+                b = judge_budges(m_id)
+                if b['badge_level'] == None:
+                    pass
+                else:
+                    post.append(b)
+        print(post) # back確認用
         return jsonify(get_badges=post)
     except Exception as e:
         abort(404, {'code': 'Not found', 'message': str(e)})
@@ -455,6 +490,7 @@ def search_meal():
     try:
         payload = request.json
         meal_name = payload.get('meal_name')
+        meal_name=str(meal_name).split("'")[-2]
         meal_id = Meal_content.query.filter(Meal_content.name==meal_name).all()[0].meal_id
         total_post = Cook_history.query.filter(Cook_history.meal_id==meal_id).all()
         post_id = []
@@ -468,7 +504,8 @@ def search_meal():
                 post_dic = {
                     'user_id':users_post[0].user_id,
                     'image_url': users_post[0].image_url,
-                    'post_id':users_post[0].post_id
+                    'post_id':users_post[0].post_id,
+                    'meal_url':users_post[0].recipe_url
                     } 
                 post_list.append(post_dic)
         return jsonify(meal_name=meal_name,post=post_list)
@@ -498,8 +535,8 @@ def search_user():
 # stage2-4 ステータスページ
 '''
 #テスト用
-#from models.models import User, Meal_content, Cook_history, Point_user, Post, User_relation, Badges
-#from models.database import db_session
+from models.models import User, Meal_content, Cook_history, Point_user, Post, User_relation, Badges
+from models.database import db_session
 '''
 @app.route('/badge-status', methods=['GET'])
 @jwt_required
@@ -509,6 +546,28 @@ def badge_status_json():
         # user_idを指定してmeal_idとmeal_nameとlevelを返す
         # user_id = 1 # とりあえず固定
         user_id = get_user_id()
+        badges_raw = Badges.query.filter(Badges.user_id==user_id).all()
+        badge_list = []
+        for data in badges_raw:
+            meal_name = Meal_content.query.filter(Meal_content.meal_id==data.meal_id).all()[0].name
+            badge_dic = {
+                'meal_id' : data.meal_id,
+                'meal_name' : meal_name,
+                'level' : data.level,
+            }
+            badge_list.append(badge_dic)
+        return jsonify(results = badge_list)
+    except Exception as e:
+        abort(404, {'code': 'Not found', 'message': str(e)})
+
+# masui
+@app.route('/<user_id>/badge-status', methods=['GET'])
+@jwt_required
+def other_badge_status_json(user_id=None):
+    try:
+        # user_idを指定してmeal_idとmeal_nameとlevelを返す
+        # user_id = 1 # とりあえず固定
+        user_id = int(user_id)
         badges_raw = Badges.query.filter(Badges.user_id==user_id).all()
         badge_list = []
         for data in badges_raw:
@@ -753,6 +812,8 @@ def meal_ranking_json():
         for hist in hists:
             meal_id, count = hist
             meal_id = meal_id[0]
+            if meal_id is None:
+                continue
             meal_name = Meal_content.query.filter(Meal_content.meal_id==meal_id).all()[0].name
             count_dic = {
                 'meal_id': meal_id,
@@ -779,7 +840,7 @@ def weekly_meal_ranking_json():
         meal_list = []
         for hist in hists:
             meal_id, post_id = hist
-            if post_id is None:
+            if post_id is None or meal_id is None:
                 continue
             create_at = Post.query.filter(Post.post_id==post_id).all()[0].create_at
             d_create_at = datetime.date(year=int(create_at[:4]), month=int(create_at[5:7]), day=int(create_at[8:10]))
@@ -848,6 +909,7 @@ def test_post():
 def error_handler(error):
     # error.code: HTTPステータスコード
     # error.description: abortで設定したdict型
+    print(error)
     return jsonify({'error': {
         'code': error.description['code'],
         'message': error.description['message']

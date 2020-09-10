@@ -318,7 +318,7 @@ def upload():
         # kimura 
         # 投稿のpostリクエストが来たらS3に画像を保存し、
         # データベースへの追記、更新を行う。
-        # user_id=get_user_id()
+        user_id=get_user_id()
         user_id=1
         dt_now = datetime.datetime.now()
         payload = request.json
@@ -338,7 +338,7 @@ def upload():
         # 料理名
         meal_name=[]
         for i in range(1,6):
-            if payload.get('meal_name{}'.format(i))!=None:
+            if payload.get('meal_name{}'.format(i))!='':
                 meal_name.append(payload.get('meal_name{}'.format(i)))
             else:
                 break
@@ -373,7 +373,7 @@ def upload():
 
         #point_userにuser_id,point,get_date追記
         add_data(Point_user(user_id,total_points,get_date))
-
+        print("バッチ処理開始")
         # return jsonify(status=0, message=''), 200
 
 
@@ -388,7 +388,8 @@ def upload():
             if len(badges_table) == 0:
                 add_data(Badges(user,meal,level))
             else:
-                badges_table.level = level
+                print("level",level)
+                badges_table[0].level = level
             db_session.commit()
         # バッチを付与するか判定
         def  judge_budges(meal_id):
@@ -414,29 +415,33 @@ def upload():
                 change_badges(user_id,meal_id,3)
                 return {'meal_name':meal_name,'badge_level':3}
             else:
-                badge_level=None
-                return {'meal_name':meal_name,'badge_level':badge_level}
+                return {'meal_name':meal_name,'badge_level':None}
                 
         # meal_id_list=[meal_id1,meal_id2,meal_id3,meal_id4,meal_id5]
         post=[]
         for m_id in meal_id:
-            b = judge_budges(m_id)
-            if b['badge_level'] == None:
+            print(m_id) # back確認用
+            if m_id == None:
                 pass
             else:
-                post.append(b)
+                b = judge_budges(m_id)
+                if b['badge_level'] == None:
+                    pass
+                else:
+                    post.append(b)
+        print(post) # back確認用
         return jsonify(get_badges=post)
     except Exception as e:
         abort(404, {'code': 'Not found', 'message': str(e)})
 
 #kimura
+#POSTページに来た時に存在する料理名を返す
 @app.route('/post',methods=['GET'])
-@jwt_required
 def return_meal_name():
     #meal_nameを取ってくる
     #jsonにして送り返す
     meal_name_list=[]
-    for i in range(len(len(Meal_content.query.all()))):
+    for i in range(len(Meal_content.query.all())):
         name_json={
             'meal_name' : Meal_content.query.all()[i].name
         }
@@ -498,8 +503,8 @@ def search_user():
 # stage2-4 ステータスページ
 '''
 #テスト用
-#from models.models import User, Meal_content, Cook_history, Point_user, Post, User_relation, Badges
-#from models.database import db_session
+from models.models import User, Meal_content, Cook_history, Point_user, Post, User_relation, Badges
+from models.database import db_session
 '''
 @app.route('/badge-status', methods=['GET'])
 @jwt_required
@@ -738,7 +743,7 @@ def followee_monthly_point_ranking_json():
 # kajiura
 # stage1-4 レシピのランキングページ
 @app.route('/meal-ranking', methods=['GET'])
-@jwt_required
+# @jwt_required
 # curl http://localhost:5000/meal-ranking
 def meal_ranking_json():
     try:
@@ -848,6 +853,7 @@ def test_post():
 def error_handler(error):
     # error.code: HTTPステータスコード
     # error.description: abortで設定したdict型
+    print(error)
     return jsonify({'error': {
         'code': error.description['code'],
         'message': error.description['message']
