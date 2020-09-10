@@ -26,7 +26,7 @@ This is development repository of it.
 * 2020/09/10: Finish development and deployed
 
 ##  4. <a name='QuickStart'></a>Quick Start
-Before run the code, you have to install some package and frameworks.
+Before run the code, you have to install some packages and frameworks.
 Please refer the requirement.
 
 First, clone this repository.
@@ -55,6 +55,7 @@ Maintainer: Team BAR
 ##  8. <a name='Citations'></a>Citations
 
 ##  9. <a name='License'></a>License
+This repository is under the MIT license.
 
 ##  10. <a name='CodeStructure'></a>Code Structure
 
