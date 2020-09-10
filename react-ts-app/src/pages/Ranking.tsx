@@ -7,17 +7,18 @@ import Container from '@material-ui/core/Container';
 import Paper from "@material-ui/core/Paper";
 
 import { asyncLocalStorage } from '../utils'
-import { getTotalBadgeRanking, getTotalMealRanking } from "./../api"
+import { getTotalBadgeRanking, getTotalMealRanking, getWeeklyMealRanking } from "./../api"
+import useLoginRedirect from '../hooks/useLoginRedirect'
 import ErrorMessage from './../components/ErrorMessage'
 import BadgeRankerList from "../components/BadgeRankerLists"
 import MealLists from "../components/MealLists"
 
 const useStyles = makeStyles((theme) => ({
   main: {
-    // marginTop: theme.spacing(8),
-    // display: 'flex',
-    // flexDirection: 'column',
-    // alignItems: 'center',
+    textAlign: 'center'
+  },
+  title: {
+    margin: '30px'
   },
   paper: {
     display: "flex",
@@ -47,8 +48,10 @@ interface MealRank {
 const Home: React.FC = () => {
   const [badgeList, setBadgeList] = useState<BadgeRank[]>([]);
   const [mealList, setMealList] = useState<MealRank[]>([])
+  const [weeklyMealList, setWeeklyMealList] = useState<MealRank[]>([])
   const [errorMessage, setErrorMessage] = useState(null);
   const classes = useStyles();
+  useLoginRedirect()
 
   useEffect(() => {
     const f = async () => {
@@ -67,6 +70,13 @@ const Home: React.FC = () => {
         .catch(err => {
           setErrorMessage(err.message)
         })
+      await getWeeklyMealRanking(jwtToken)
+        .then(r => {
+          setWeeklyMealList(r.results)
+        })
+        .catch(err => {
+          setErrorMessage(err.messgae)
+        })
     };
     f()
   }, [])
@@ -74,15 +84,21 @@ const Home: React.FC = () => {
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.main}>
-        <Typography component="h2" variant="h5">Ranking</Typography>
+        <div className="back_rank">
+          <h3 className={classes.title} id="h3_back">Ranking</h3>
+        </div>
         <ErrorMessage message={errorMessage} />
         <Paper className={classes.paper}>
-          <Typography component="h4" variant="h6">Meal Ranking</Typography>
-          {mealList[0] ? <MealLists mealLists={mealList} /> : <MDSpinner size={56} />}
+          <Typography component="h4" variant="h6">Total Meal Ranking</Typography>
+          {mealList[0] ? <MealLists mealLists={mealList} /> : <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>}
+        </Paper>
+        <Paper className={classes.paper}>
+          <Typography component="h4" variant="h6">Weekly Meal Ranking</Typography>
+          {weeklyMealList[0] ? <MealLists mealLists={mealList} /> : <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>}
         </Paper>
         <Paper className={classes.paper}>
           <Typography component="h4" variant="h6">Total Badge Ranking</Typography>
-          {badgeList[0] ? <BadgeRankerList badgeList={badgeList} /> : <MDSpinner size={56} />}
+          {badgeList[0] ? <BadgeRankerList badgeList={badgeList} /> : <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>}
         </Paper>
       </div>
     </Container>

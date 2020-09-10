@@ -9,8 +9,8 @@ export default function useLoginRedirect() {
   useEffect(() => {
     const f = async () => {
       const token = await asyncLocalStorage.getItem('access_token')
-      if (token !== '0') {
-        history.push('/timeline')
+      if (token === '0') {
+        history.push('/login')
       }
     }
     f()

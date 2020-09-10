@@ -4,10 +4,8 @@ import { useHistory } from "react-router-dom"
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-
 
 import { login } from "../api"
 import { asyncLocalStorage } from "../utils"
@@ -54,35 +52,37 @@ export default function BasicTextFields() {
 
   return (
     <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
-        <Typography component="h3" variant="h5">
-          Login
-        </Typography>
-        <ErrorMessage message={errorMessage} />
-        <form className={classes.form} noValidate autoComplete="off">
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Email" onChange={(event) => setEmail(event.target.value)}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Password"
-            type="password"
-            onChange={(event) => setPassword(event.target.value)}
-          />
-          <Button className={classes.submit} fullWidth variant="contained" color="primary" onClick={handleLogin}>
-            login
-          </Button>
-        </form>
-        <Link href="" onClick={() => history.push("/signup")}>
-          アカウントをお持ちでないですか？Sign Up
-        </Link>
+      <div className='back'>
+        <div className={classes.paper}>
+          <h3 id="h3_back">Login</h3>
+          <ErrorMessage message={errorMessage} />
+          <form className={classes.form} noValidate autoComplete="off">
+            <TextField
+              variant="outlined"
+              className="form_inside"
+              margin="normal"
+              required
+              fullWidth
+              label="Email" onChange={(event) => setEmail(event.target.value)}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              className="form_inside"
+              required
+              fullWidth
+              label="Password"
+              type="password"
+              onChange={(event) => setPassword(event.target.value)}
+            />
+            <Button className={classes.submit} fullWidth variant="contained" onClick={handleLogin}>
+              login
+            </Button>
+          </form>
+          <Link href="" onClick={() => history.push("/signup")}>
+            <p className="account">アカウントをお持ちでないですか？Sign Up</p>
+          </Link>
+        </div>
       </div>
     </Container>
   );

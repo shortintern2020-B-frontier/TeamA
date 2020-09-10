@@ -1,20 +1,23 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 
+import Container from '@material-ui/core/Container';
+import Link from '@material-ui/core/Link';
+
 import './../css/home.css'
-import useLoginRedirect from '../hooks/useLoginRedirect'
 
 const Home: React.FC = () => {
   const history = useHistory();
-  useLoginRedirect()
 
   return (
-    <>
+    <Container maxWidth='xs' style={{ textAlign: 'center' }}>
       <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"></link>
-      <h3 className="h3">Home画面</h3>
-      <p>作成中</p>
-      <button onClick={() => history.push('/login')}>Loginする</button>
-    </>
+      <div className="back_mypage">
+        <h3 id="h3_back">サービス名</h3>
+      </div>
+      <p>あなたの自炊をサポートします</p>
+      <Link onClick={() => history.push('/login')}>サービスを使ってみる</Link>
+    </Container>
   )
 }
 

@@ -19,6 +19,8 @@ import UserRelation from "./pages/UserRelation"
 import NotFound from "./pages/NotFound"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
+import SearchPage from "./pages/SearchPage"
+import FollowerPage from "./pages/FollowerPage"
 
 import './css/index.css'
 
@@ -40,6 +42,8 @@ const App: React.FC = () => {
           <Route exact path="/:user_id/status" component={OtherUserStatus} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={Signup} />
+          <Route exact path="/search" component={SearchPage} />
+          <Route exact path="/follower" component={FollowerPage} />
           <Route component={NotFound} />
         </Switch>
       </Router>

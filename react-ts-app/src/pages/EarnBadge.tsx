@@ -13,7 +13,7 @@ interface BadgeType {
 
 const BadgeComponent: React.FC<BadgeType | undefined> = (props) => {
   return (
-    <Card>
+    <Card style={{ height: 250, width: 200 }}>
       <CardContent>
         <CardMedia
           title={props.meal_name}
@@ -37,7 +37,7 @@ interface Props {
 
 const EarnBadge: React.FC<Props> = (props) => {
   const createBadges = () => props.earnedBadges ? props.earnedBadges.map(
-    item => <BadgeComponent meal_name={item.meal_name} badge_level={item.badge_level} />
+    (item, index) => <BadgeComponent meal_name={item.meal_name} badge_level={item.badge_level} key={index} />
   ) : null;
   return <div>{createBadges()}</div>
 }

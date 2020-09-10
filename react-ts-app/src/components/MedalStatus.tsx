@@ -1,5 +1,11 @@
 import React from 'react';
 
+import Table from "@material-ui/core/Table";
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from "@material-ui/core/TableBody";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+
 interface MedalItem {
   level: number
   meal_id: number
@@ -14,14 +20,24 @@ const MedalStatus: React.FC<Props> = (props) => {
 
   const List = props.medalList.map(data => {
     return (
-      <ul key={data.meal_id}>
-        <li>{data.meal_name}</li>
-        <li>{data.level}</li>
-      </ul>
+      <TableRow key={data.meal_id}>
+        <TableCell>{data.meal_name}</TableCell>
+        <TableCell>{data.level}</TableCell>
+      </TableRow>
     )
   })
   return (
-    <section>{List}</section>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>バッジ名</TableCell>
+          <TableCell>レベル</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {List}
+      </TableBody>
+    </Table >
   )
 }
 

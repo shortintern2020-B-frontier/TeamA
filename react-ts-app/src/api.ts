@@ -23,6 +23,8 @@ const toJson = async (res: Response) => {
 };
 
 export const testToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTk1NTQwMTYsIm5iZiI6MTU5OTU1NDAxNiwianRpIjoiY2I3N2EwZTYtNjQxZS00ZGY5LWJkOTctZGJiMzAzMGQ5YTVlIiwiaWRlbnRpdHkiOiJhLmNvbSIsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.cSXMFthBXW_JiUQv8N_aOJblBHY50FLztfRfbiqa0G4'
+// test account
+// password: hoge, email: a.com
 
 // ping test
 export const test = async () => {
@@ -105,6 +107,7 @@ export const createPost = async <T>(jwtToken: string, body: T) => {
   const resp = await fetch(`${baseUrl}/post`, {
     method: "POST",
     headers: {
+      'Authorization': `Bearer ${jwtToken}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
@@ -149,6 +152,18 @@ export const getTotalMealRanking = async (jwtToken: string) => {
   return await toJson(resp);
 }
 
+export const getWeeklyMealRanking = async (jwtToken: string) => {
+  const resp = await fetch(`${baseUrl}/weekly-meal-ranking`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+      'Content-Type': "application/json",
+    }),
+    credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}
+
 export const getMyStatus = async (jwtToken: string) => {
   const resp = await fetch(`${baseUrl}/badge-status`, {
     method: "GET",
@@ -182,3 +197,16 @@ export const getOtherStatus = async <T>(jwtToken: string, user_id: string, body:
   });
   return await toJson(resp);
 }
+
+export const mealSearch = async <T>(body: T) => {
+  const resp = await fetch(`${baseUrl}/search/meal`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+    credentials: 'same-origin',
+  });
+
+  return await toJson(resp);
+};

@@ -9,7 +9,6 @@ export const asyncLocalStorage = {
   getItem: async (key: string) => {
     return Promise.resolve().then(() => {
       const token = localStorage.getItem(key);
-      console.log(token)
       if (!token) {
         return '0'
       }
@@ -22,15 +21,3 @@ export const asyncLocalStorage = {
     });
   }
 };
-
-// export const storeToken = (key: string, value: string) => {
-//   localStorage.setItem(key, value);
-// };
-
-// export const getToken = (key: string): string => {
-//   const token = localStorage.getItem(key)
-//   if (!token) {
-//     return 'Not found token '
-//   }
-//   return token
-// }

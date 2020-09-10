@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Link from "@material-ui/core/Link"
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 
@@ -14,7 +15,7 @@ const MealList: React.FC<Props> = (props) => {
 
   return (
     <TableRow key={meal_id}>
-      <TableCell>{meal_name}</TableCell>
+      <TableCell><Link href={"https://recipe.rakuten.co.jp/search/" + meal_name}>{meal_name}</Link></TableCell>
       <TableCell>{count}</TableCell>
     </TableRow>
   )

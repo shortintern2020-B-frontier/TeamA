@@ -1,38 +1,83 @@
-import React, { useEffect } from "react";
-import { getTimeline } from "../api"
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+
+import Container from '@material-ui/core/Container';
+import MDSpinner from 'react-md-spinner';
+
+import { getTimeline, getMealName } from "../api"
 import { asyncLocalStorage } from "../utils"
+import useLoginRedirect from '../hooks/useLoginRedirect'
+import PhotoDisplay from '../components/PhotoDisplay'
+import ErrorMessage from './../components/ErrorMessage'
+import LogoutButton from '../components/LogoutButton'
 
 
-// results: [{post_id, user_id, image_url, create_at}, {post_id, user_id, image_url, create_at}, …]
 interface Post {
-
+  post_id: number;
+  user_id: number;
+  image_url: string;
+  create_at: string;
 }
 
 
 const Timeline: React.FC = () => {
+  const [posts, setPosts] = useState<Post[]>();
+  const [mealName, setMealName] = useState([{ meal_name: "" }]);
+  const [errorMessage, setErrorMessage] = useState("");
+  useLoginRedirect()
+  const history = useHistory();
   useEffect(() => {
-    // const token = asyncLocalStorage.getItem("access_token")
     const f = async () => {
-      let token = "";
-      await asyncLocalStorage.getItem("access_token")
-        .then(res => { token = res })
-        .catch(err => console.log(err))
-      await getTimeline(token)
+      const jwtToken: any = await asyncLocalStorage.getItem("access_token").catch(err => console.log(err))
+      await getTimeline(jwtToken)
         .then(res => {
-          // setBadgeList(r.results)
-          console.log(res.results)
+          setPosts(res.results);
         })
         .catch((err) => {
-          // setErrorMessage(err.message);
+          setErrorMessage(err.message);
+        });
+      await getMealName()
+        .then(res => {
+          setMealName(res.results)
+        })
+        .catch((err) => {
+          setErrorMessage(err.message);
         });
     };
     f()
   }, [])
+
+  // const handleMealSearch = async () => {
+  //   await mealSearch({ meal_name: searchKey })
+  //     .then(res => {
+  //       console.log(res)
+  //     })
+  //     .catch(err => {
+  //       setErrorMessage(err.message);
+  //     });
+  // }
+
+  const onClick = () => {
+    asyncLocalStorage.removeItem('access_token')
+    history.push('/')
+  }
+
   return (
-    <>
-      <h3>Timeline</h3>
-      <p>aa</p>
-    </>
+    <Container maxWidth='xs'>
+      <div className="back_timeline">
+        <h3 id="h3_timeline">Timeline</h3>
+      </div>
+      <ErrorMessage message={errorMessage} />
+      {
+        posts ?
+          <PhotoDisplay post_id={posts} />
+          : <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>
+      }
+      <hr />
+      <p style={{ textAlign: 'center' }}>
+        <LogoutButton onClick={onClick} />
+      </p>
+    </Container >
   )
 }
 
