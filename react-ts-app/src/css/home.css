@@ -48,7 +48,7 @@ p{
 /* ログイン、サインアウト用 */
 .back {
   background-image: linear-gradient(
-      rgba(0,0,0,0.4),rgba(0,0,0,0.4)
+      rgba(0,0,0,0.6),rgba(0,0,0,0.6)
   ),url("image/meal.jpg");
   background-position: center center;
   background-repeat: no-repeat;
@@ -93,7 +93,8 @@ p{
 }
 .post_form{
   padding: 20px;
-  background-color: #d8d6d6;
+  background-color: #ebe8e8;
+  /* background-color: red; */
   border-radius: 10px;
   margin: 5px;
 }
@@ -101,6 +102,25 @@ p{
   margin: 10px auto 10px auto;
   /* background-color: red; */
 }
+.post_content p{
+  border-left :solid 5px #f1b987;
+  border-bottom: solid 1px gray;
+  padding: 10px;
+}
+/* 
+.post_content input {
+  position: relative;
+  margin: 8px 0 0 -14px;
+  }
+.post_conteninput::before {
+  content: “添付ファイル：”;
+  position: absolute;
+  background: #fff;
+  width: 110px;
+  height: 26px;
+  line-height: 1.8;
+  text-align: right;
+  } */
 
 /* タイムラインページ */
 .back_timeline{

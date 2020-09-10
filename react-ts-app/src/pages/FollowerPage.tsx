@@ -6,11 +6,7 @@ import { getMyRelation } from "../api"
 import { asyncLocalStorage } from "../utils"
 import useLoginRedirect from '../hooks/useLoginRedirect'
 import ErrorMessage from './../components/ErrorMessage'
-import Table from "@material-ui/core/Table";
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from '@material-ui/core/TableCell';
+import UserList from "./../components/UserList"
 
 interface User {
     user_id: number;
@@ -26,7 +22,6 @@ const FollowerPage: React.FC = () => {
     const [myRelation, setMyRelation] = useState<Relation>();
     const [errorMessage, setErrorMessage] = useState("");
     const location = useLocation();
-    console.log(location.pathname)
     useLoginRedirect()
     useEffect(() => {
         const f = async () => {
@@ -48,8 +43,12 @@ const FollowerPage: React.FC = () => {
 
     return (
         <Container maxWidth='xs'>
-            <ErrorMessage message={errorMessage} />
-            <div></div>
+            <ErrorMessage message={errorMessage} />{
+                location && myRelation ?
+                    <UserList users={location.pathname === "/follower" ? myRelation?.follower : myRelation.followee} /> :
+                    <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>
+            }
+
         </Container >
     )
 }

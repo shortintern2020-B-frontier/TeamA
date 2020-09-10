@@ -63,6 +63,7 @@ export default function BasicTextFields() {
               margin="normal"
               required
               fullWidth
+              color="primary"
               label="Email" onChange={(event) => setEmail(event.target.value)}
             />
             <TextField

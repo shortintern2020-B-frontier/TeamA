@@ -44,6 +44,7 @@ const App: React.FC = () => {
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/search" component={SearchPage} />
           <Route exact path="/follower" component={FollowerPage} />
+          <Route exact path="/followee" component={FollowerPage} />
           <Route component={NotFound} />
         </Switch>
       </Router>

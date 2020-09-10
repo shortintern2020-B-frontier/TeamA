@@ -56,7 +56,7 @@ const OtherUser: React.FC = () => {
     <Container component="main" maxWidth="xs">
       <ErrorMessage message={errorMessage} />
       {userInfo ? (
-        <UserInfo followee={userInfo.followees} followers={userInfo.follwers} totalBadge={userInfo.total_badge} totalPoint={userInfo.total_point} />
+        <UserInfo followee={userInfo.followees} followers={userInfo.follwers} totalBadge={userInfo.total_badge} totalPoint={userInfo.total_point} userId={user_id} />
       ) : null}
       {userInfo ?
         <PhotoDisplay post_id={userInfo.post_id} />

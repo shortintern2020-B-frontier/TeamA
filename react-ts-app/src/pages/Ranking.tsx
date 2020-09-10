@@ -89,7 +89,7 @@ const Home: React.FC = () => {
         </div>
         <ErrorMessage message={errorMessage} />
         <Paper className={classes.paper}>
-          <Typography component="h4" variant="h6">Total Meal Ranking</Typography>
+          <div id="h3_back">Total Meal Ranking</div>
           {mealList[0] ? <MealLists mealLists={mealList} /> : <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>}
         </Paper>
         <Paper className={classes.paper}>

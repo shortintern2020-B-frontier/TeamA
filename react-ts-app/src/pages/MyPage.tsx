@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import MDSpinner from 'react-md-spinner';
-
 import Container from '@material-ui/core/Container';
 
 import { getMyUserInfo } from "./../api"

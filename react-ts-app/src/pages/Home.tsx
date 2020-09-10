@@ -13,7 +13,7 @@ const Home: React.FC = () => {
     <Container maxWidth='xs' style={{ textAlign: 'center' }}>
       <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"></link>
       <div className="back_mypage">
-        <h3 id="h3_back">サービス名</h3>
+        <h3 id="h3_back">Cookle</h3>
       </div>
       <p>あなたの自炊をサポートします</p>
       <Link onClick={() => history.push('/login')}>サービスを使ってみる</Link>
