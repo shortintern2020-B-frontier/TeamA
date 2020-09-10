@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { getMyUserInfo } from "./../api"
+import { useHistory } from "react-router-dom";
+import MDSpinner from 'react-md-spinner';
 
-const mockUserInfo = {
-  post: [
-    { post_id: 1, image_url: "https://images.unsplash.com/photo-1599335937498-90b82b84d603?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" },
-    { post_id: 2, image_url: "https://images.unsplash.com/photo-1599335937498-90b82b84d603?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" }
-  ],
-  follower: 2,
-  followees: 3,
-  total_badge: 12,
-  total_point: 34
-}
+import Container from '@material-ui/core/Container';
+
+import { getMyUserInfo } from "./../api"
+import { asyncLocalStorage } from '../utils'
+import useLoginRedirect from '../hooks/useLoginRedirect'
+import LogoutButton from '../components/LogoutButton'
+import ErrorMessage from './../components/ErrorMessage'
+import PhotoDisplay from '../components/PhotoDisplay'
+import UserInfo from '../components/UserInfo'
+
+// const Image = require('react-image-resizer/Image')
+// import Image from 'react-image-resizer';
+
 
 interface Post {
   post_id: number
@@ -18,8 +22,8 @@ interface Post {
 }
 
 interface State {
-  post: Post[]
-  follewers: number
+  post_id: Post[]
+  followers: number
   followees: number
   total_badge: number
   total_point: number
@@ -27,31 +31,51 @@ interface State {
 
 const Home: React.FC = () => {
   const [userInfo, setUserInfo] = useState<State>()
-  console.log(userInfo);
+  const [errorMessage, setErrorMessage] = useState(null);
+  useLoginRedirect()
+  const history = useHistory();
 
   useEffect(() => {
     const f = async () => {
-      const res = await getMyUserInfo()
-      console.log(res);
-      setUserInfo(res)
+      const jwtToken = await asyncLocalStorage.getItem('access_token')
+      await getMyUserInfo(jwtToken)
+        .then(res => {
+          setUserInfo(res)
+        })
+        .catch(err => {
+          setErrorMessage(err.message)
+        })
     }
     f()
-  })
+  }, [])
+
+  const onClick = () => {
+    asyncLocalStorage.removeItem('access_token')
+    history.push('/')
+  }
 
   return (
-    <>
-      <h3>My Photo Page</h3>
-      <p>フォロー数：{mockUserInfo.followees}</p>
-      <p>フォロワー数：{mockUserInfo.follower}</p>
-      <p>トータルバッチ：{mockUserInfo.total_badge}</p>
-      <p>トータルポイント：{mockUserInfo.total_point}</p>
-      {mockUserInfo.post.map((p) => {
-        return (
-          <img src={p.image_url} alt="icon"></img>
-        )
-      })}
-    </>
+    <Container maxWidth="xs">
+      <div className="back_mypage">
+        <h3 id="h3_back">My Photos</h3>
+      </div>
+      <ErrorMessage message={errorMessage} />
+      {userInfo ? (
+        <UserInfo followee={userInfo.followees} followers={userInfo.followers} totalBadge={userInfo.total_badge} totalPoint={userInfo.total_point} />
+      )
+        :
+        <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>}
+      {userInfo ?
+        <PhotoDisplay post_id={userInfo.post_id} />
+        : null
+      }
+      <hr />
+      <p style={{ textAlign: 'center' }}>
+        <LogoutButton onClick={onClick} />
+      </p>
+    </Container>
   )
 }
 
 export default Home;
+

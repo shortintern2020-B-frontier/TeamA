@@ -1,6 +1,11 @@
 import React from "react";
 
-const ErrorMessage: React.FC = (message) => {
+interface Props {
+  message: string | null
+}
+
+const ErrorMessage: React.FC<Props> = (props) => {
+  const { message } = props
   if (message === null || message === "") {
     return null;
   }

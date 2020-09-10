@@ -1,9 +1,14 @@
 import React from "react";
 
+import Container from '@material-ui/core/Container';
+
 const NotFound: React.FC = () => {
 
   return (
-    <p>Not Found</p>
+    <Container maxWidth="xs" style={{ textAlign: 'center' }}>
+      <h3>404 Not Found</h3>
+      <p>このページは存在しません</p>
+    </Container>
   )
 }
 
