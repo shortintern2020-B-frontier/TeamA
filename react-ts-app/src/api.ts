@@ -103,6 +103,14 @@ export const getMyRelation = async (jwtToken: string) => {
   return await toJson(resp);
 }
 
+export const getOtherRelation = async (jwtToken: string, user_id: string) => {
+  const resp = await fetch(`${baseUrl}/${user_id}/relation`, {
+    method: "GET",
+    // credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}
+
 export const createPost = async <T>(jwtToken: string, body: T) => {
   const resp = await fetch(`${baseUrl}/post`, {
     method: "POST",

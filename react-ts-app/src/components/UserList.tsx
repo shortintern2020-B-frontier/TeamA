@@ -18,7 +18,7 @@ const CreateList: React.FC<User> = (props) => {
     const history = useHistory();
 
     const onClick = () => {
-        const path = user_id + '/mypage'
+        const path = '/' + user_id + '/mypage'
         history.push(path);
     };
 

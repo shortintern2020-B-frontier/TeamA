@@ -3,19 +3,17 @@ import React from 'react'
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
-
-// import Card from '@material-ui/core/Card';
-// import CardActions from '@material-ui/core/CardActions';
-// import CardContent from '@material-ui/core/CardContent';
-// import CardMedia from '@material-ui/core/CardMedia';
-// import GridListTile from '@material-ui/core/GridListTile';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 
 interface Post {
   post_id: number;
   image_url: string;
   meal_url?: string;
   user_id?: number;
-  create_at?: string
+  name?: string;
+  create_at?: string;
 }
 
 interface Props {
@@ -38,18 +36,20 @@ const PhotoDisplay: React.FC<Props> = (props) => {
 
   const photos = props.post_id.map(item => {
     return (
-      <Grid item key={item.post_id} xs={6}>
+      <GridListTile key={item.post_id} >
         <Link href={item.meal_url}>
           <img className={classes.image} src={item.image_url} alt="meal"></img>
         </Link>
-      </Grid>
+
+        {item.name && item.create_at ? <GridListTileBar title={item.name} subtitle={item.create_at} /> : ""}
+      </GridListTile>
     );
   })
 
   return (
-    <Grid className={classes.grid} container spacing={1}>
+    <GridList className={classes.grid}>
       {photos}
-    </Grid>
+    </GridList>
   )
 }
 
