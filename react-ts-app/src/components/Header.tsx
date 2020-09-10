@@ -175,7 +175,7 @@ const NavBar: React.FC = () => {
       <AppBar position="static" style={{ background: '#f4a460' }}>
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap onClick={() => history.push("/timeline")}>
-            サービス名
+            Cookle
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>

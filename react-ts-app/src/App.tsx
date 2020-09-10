@@ -21,6 +21,7 @@ import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import SearchPage from "./pages/SearchPage"
 import FollowerPage from "./pages/FollowerPage"
+import OtherUserFollower from "./pages/OtherUserFollower"
 
 import './css/index.css'
 
@@ -44,6 +45,9 @@ const App: React.FC = () => {
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/search" component={SearchPage} />
           <Route exact path="/follower" component={FollowerPage} />
+          <Route exact path="/followee" component={FollowerPage} />
+          <Route exact path="/:user_id/follower" component={OtherUserFollower} />
+          <Route exact path="/:user_id/followee" component={OtherUserFollower} />
           <Route component={NotFound} />
         </Switch>
       </Router>

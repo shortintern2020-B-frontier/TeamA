@@ -24,7 +24,7 @@ const BadgeRanker: React.FC<Props> = (props) => {
   return (
     <TableRow key={user_id}>
       <TableCell>
-        <Link href="" onClick={onClick}>{name}</Link>
+        <Link style={{ color: '#f4a460' }} href="" onClick={onClick}>{name}</Link>
       </TableCell>
       <TableCell>{total_badge}</TableCell>
       <TableCell>{total_point}</TableCell>

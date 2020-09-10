@@ -15,6 +15,7 @@ import LogoutButton from '../components/LogoutButton'
 interface Post {
   post_id: number;
   user_id: number;
+  name?: string;
   image_url: string;
   create_at: string;
 }
@@ -23,6 +24,7 @@ interface Post {
 const Timeline: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>();
   const [mealName, setMealName] = useState([{ meal_name: "" }]);
+  const [bonus, setBonus] = useState("")
   const [errorMessage, setErrorMessage] = useState("");
   useLoginRedirect()
   const history = useHistory();
@@ -32,13 +34,15 @@ const Timeline: React.FC = () => {
       await getTimeline(jwtToken)
         .then(res => {
           setPosts(res.results);
+
         })
         .catch((err) => {
           setErrorMessage(err.message);
         });
       await getMealName()
         .then(res => {
-          setMealName(res.results)
+          setMealName(res.results);
+          setBonus(res.bonus);
         })
         .catch((err) => {
           setErrorMessage(err.message);
@@ -46,16 +50,6 @@ const Timeline: React.FC = () => {
     };
     f()
   }, [])
-
-  // const handleMealSearch = async () => {
-  //   await mealSearch({ meal_name: searchKey })
-  //     .then(res => {
-  //       console.log(res)
-  //     })
-  //     .catch(err => {
-  //       setErrorMessage(err.message);
-  //     });
-  // }
 
   const onClick = () => {
     asyncLocalStorage.removeItem('access_token')
@@ -68,6 +62,7 @@ const Timeline: React.FC = () => {
         <h3 id="h3_timeline">Timeline</h3>
       </div>
       <ErrorMessage message={errorMessage} />
+      <p>きょうの料理：<a href={`https://recipe.rakuten.co.jp/search/${bonus}`}>{bonus}</a></p>
       {
         posts ?
           <PhotoDisplay post_id={posts} />

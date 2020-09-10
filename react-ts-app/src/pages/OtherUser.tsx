@@ -13,16 +13,17 @@ import PhotoDisplay from '../components/PhotoDisplay'
 import UserInfo from '../components/UserInfo'
 
 interface Post {
-  post_id: number
-  image_url: string
+  post_id: number;
+  image_url: string;
 }
 
 interface State {
-  post_id: Post[]
-  follwers: number
-  followees: number
-  total_badge: number
-  total_point: number
+  post_id: Post[];
+  follwers: number;
+  followees: number;
+  total_badge: number;
+  total_point: number;
+  name: string;
 }
 
 const useStyles = makeStyles({
@@ -39,7 +40,7 @@ const OtherUser: React.FC = () => {
   const classes = useStyles()
 
   const path = useLocation().pathname;
-  const user_id = path.split("/")[1];
+  const user_id = path.match(/\/([0-9]+)\/mypage/u)![1];
   useLoginRedirect()
 
   useEffect(() => {
@@ -55,8 +56,10 @@ const OtherUser: React.FC = () => {
   return (
     <Container component="main" maxWidth="xs">
       <ErrorMessage message={errorMessage} />
+      <h3>{userInfo ? userInfo.name : ""}</h3>
+      <button>フォロー</button>
       {userInfo ? (
-        <UserInfo followee={userInfo.followees} followers={userInfo.follwers} totalBadge={userInfo.total_badge} totalPoint={userInfo.total_point} />
+        <UserInfo followee={userInfo.followees} followers={userInfo.follwers} totalBadge={userInfo.total_badge} totalPoint={userInfo.total_point} userId={user_id} />
       ) : null}
       {userInfo ?
         <PhotoDisplay post_id={userInfo.post_id} />

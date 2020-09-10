@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { makeStyles } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import MDSpinner from 'react-md-spinner';
 import { getMealName, mealSearch } from "../api"
@@ -8,6 +9,19 @@ import PhotoDisplay from '../components/PhotoDisplay'
 import ErrorMessage from './../components/ErrorMessage'
 import Search from './../components/Search'
 
+const useStyles = makeStyles({
+    textForm: {
+        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "yellow"
+        },
+        "& .MuiInputLabel-outlined.Mui-focused": {
+            color: "yellow"
+        },
+        backgroundColor: '#fff',
+        height: 'auto',
+        borderRadius: '5px',
+    },
+})
 
 interface Post {
     post_id: number;
@@ -27,6 +41,8 @@ const Timeline: React.FC = () => {
     const [searchKey, setSearchKey] = useState("");
     const [result, setResult] = useState<Result>();
     const [searching, setSearching] = useState(false);
+    const classes = useStyles();
+
     useLoginRedirect()
     useEffect(() => {
         const f = async () => {

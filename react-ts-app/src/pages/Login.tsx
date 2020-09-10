@@ -14,6 +14,17 @@ import ErrorMessage from './../components/ErrorMessage'
 
 const useStyles = makeStyles((theme: Theme) =>
   ({
+    textForm: {
+      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: "orange"
+      },
+      "& .MuiInputLabel-outlined.Mui-focused": {
+        color: "orange"
+      },
+      backgroundColor: '#fff',
+      height: 'auto',
+      borderRadius: '5px',
+    },
     paper: {
       marginTop: theme.spacing(8),
       display: 'flex',
@@ -23,9 +34,11 @@ const useStyles = makeStyles((theme: Theme) =>
     form: {
       width: '100%',
       marginTop: theme.spacing(1),
+      borderColort: 'red'
     },
     submit: {
       margin: theme.spacing(3, 0, 2),
+      background: 'orange'
     },
   }),
 );
@@ -59,16 +72,18 @@ export default function BasicTextFields() {
           <form className={classes.form} noValidate autoComplete="off">
             <TextField
               variant="outlined"
-              className="form_inside"
+              className={classes.textForm}
               margin="normal"
               required
               fullWidth
+              color="primary"
               label="Email" onChange={(event) => setEmail(event.target.value)}
             />
             <TextField
               variant="outlined"
               margin="normal"
-              className="form_inside"
+              // className="form_inside"
+              className={classes.textForm}
               required
               fullWidth
               label="Password"

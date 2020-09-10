@@ -103,6 +103,14 @@ export const getMyRelation = async (jwtToken: string) => {
   return await toJson(resp);
 }
 
+export const getOtherRelation = async (jwtToken: string, user_id: string) => {
+  const resp = await fetch(`${baseUrl}/${user_id}/relation`, {
+    method: "GET",
+    // credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}
+
 export const createPost = async <T>(jwtToken: string, body: T) => {
   const resp = await fetch(`${baseUrl}/post`, {
     method: "POST",
@@ -186,14 +194,13 @@ export const getOtherPage = async <T>(jwtToken: string, user_id: string) => {
   return await toJson(resp);
 }
 
-export const getOtherStatus = async <T>(jwtToken: string, user_id: string, body: T) => {
-  const resp = await fetch(`${baseUrl}/${user_id}/status`, {
+export const getOtherStatus = async <T>(jwtToken: string, user_id: string) => {
+  const resp = await fetch(`${baseUrl}/${user_id}/badge-status`, {
     method: "GET",
     headers: new Headers({
       Authorization: `Bearer ${jwtToken}`,
     }),
     credentials: 'same-origin',
-    body: JSON.stringify(body),
   });
   return await toJson(resp);
 }

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import MDSpinner from 'react-md-spinner';
-
 import Container from '@material-ui/core/Container';
 
 import { getMyUserInfo } from "./../api"
@@ -17,16 +16,17 @@ import UserInfo from '../components/UserInfo'
 
 
 interface Post {
-  post_id: number
-  image_url: string
+  post_id: number;
+  image_url: string;
 }
 
 interface State {
-  post_id: Post[]
-  followers: number
-  followees: number
-  total_badge: number
-  total_point: number
+  post_id: Post[];
+  followers: number;
+  followees: number;
+  total_badge: number;
+  total_point: number;
+  name: string;
 }
 
 const Home: React.FC = () => {
@@ -60,6 +60,8 @@ const Home: React.FC = () => {
         <h3 id="h3_back">My Photos</h3>
       </div>
       <ErrorMessage message={errorMessage} />
+      <h3>{userInfo ? userInfo.name : ""}</h3>
+
       {userInfo ? (
         <UserInfo followee={userInfo.followees} followers={userInfo.followers} totalBadge={userInfo.total_badge} totalPoint={userInfo.total_point} />
       )

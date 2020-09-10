@@ -6,8 +6,9 @@ html{
 } 
 
 body{
-  margin: 0 auto 0 auto;
-  padding: 0px;
+  /* margin: 0 auto 0 auto; */
+  /* padding: 0px; */
+  /* background-color: red; */
   font-family: 'M PLUS Rounded 1c', sans-serif;
 }
 
@@ -34,7 +35,6 @@ body{
   font-family: 'MuseoModerno', cursive;
 }
 
-
 p{
   font-family: 'M PLUS Rounded 1c', sans-serif;
 }
@@ -48,8 +48,8 @@ p{
 /* ログイン、サインアウト用 */
 .back {
   background-image: linear-gradient(
-      rgba(0,0,0,0.4),rgba(0,0,0,0.4)
-  ),url("image/meal.jpg");
+      rgba(0,0,0,0.6),rgba(0,0,0,0.6)
+  ),url("https://s3-ap-northeast-1.amazonaws.com/rakuten.intern2020/image/meal.jpg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -64,7 +64,7 @@ p{
 .back_rank {
   background-image: linear-gradient(
       rgba(0,0,0,0.6),rgba(0,0,0,0.6)
-  ),url("image/cake5.jpg");
+  ),url("https://s3-ap-northeast-1.amazonaws.com/rakuten.intern2020/image/cake5.jpg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -80,7 +80,7 @@ p{
 .back_post {
   background-image: linear-gradient(
       rgba(0,0,0,0.5),rgba(0,0,0,0.5)
-  ),url("image/cook2.jpg");
+  ),url("https://s3-ap-northeast-1.amazonaws.com/rakuten.intern2020/image/cook2.jpg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -93,7 +93,8 @@ p{
 }
 .post_form{
   padding: 20px;
-  background-color: #d8d6d6;
+  background-color: #ebe8e8;
+  /* background-color: red; */
   border-radius: 10px;
   margin: 5px;
 }
@@ -101,6 +102,26 @@ p{
   margin: 10px auto 10px auto;
   /* background-color: red; */
 }
+.post_content p{
+  border-left :solid 5px #f1b987;
+  border-bottom: solid 1px gray;
+  padding: 10px;
+}
+
+.upload {
+  position: relative;
+  margin: 8px 0 0 -14px;
+  background-color: red;
+  }
+.upload::before {
+  content: “添付ファイル：”;
+  position: absolute;
+  background: #fff;
+  width: 110px;
+  height: 26px;
+  line-height: 1.8;
+  text-align: right;
+  }
 
 /* タイムラインページ */
 .back_timeline{
@@ -136,7 +157,7 @@ p{
 .back_mypage{
   background-image: linear-gradient(
       rgba(0,0,0,0.5),rgba(0,0,0,0.5)
-  ),url("image/tomato.jpg");
+  ),url("https://s3-ap-northeast-1.amazonaws.com/rakuten.intern2020/image/tomato.jpg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -151,7 +172,7 @@ p{
 .back_state{
   background-image: linear-gradient(
       rgba(0,0,0,0.5),rgba(0,0,0,0.5)
-  ),url("image/cook4.jpg");
+  ),url("https://s3-ap-northeast-1.amazonaws.com/rakuten.intern2020/image/cook4.jpg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -160,4 +181,146 @@ p{
   color: #fff;
   background-color: #272424;
   border-radius: 5px;
+}
+
+/* ホーム(LP) */
+.back_home{
+  background-image: linear-gradient(
+      rgba(0,0,0,0.5),rgba(0,0,0,0.5)
+  ),url("https://s3-ap-northeast-1.amazonaws.com/rakuten.intern2020/image/meal.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 60vh;
+  text-align: center;
+}
+
+.back_home h2{
+  /* margin: 10px; */
+  padding: 80px;
+  /* position: absolute; */
+  color: white;
+  /* font-family: 'Bad Script', cursive; */
+  font-family: 'Bad Script', cursive;
+  font-family: 'Baloo Chettan 2', cursive;
+  font-family: 'MuseoModerno', cursive;
+}
+
+.home_back_p{
+  color: white;
+  padding: 50px;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+.home1{
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 60vh;
+  /* text-align: center; */
+  background-color: rgb(226, 226, 226);
+}
+
+.home1 h4{
+  padding: 50px;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+.home1 p{
+  color: white;
+}
+
+.home2{
+padding: 10px;
+background-position: center center;
+background-repeat: no-repeat;
+background-size: cover;
+height: 50vh;
+text-align: center;
+background-color: #faecd7;
+/* border-radius: 5px; */
+}
+
+/* .home2 h4 {
+  padding: 1rem 2rem;
+  color: #fff;
+  background: rgb(235, 155, 36);
+  -webkit-box-shadow: 5px 5px 0 #703600;
+  box-shadow: 5px 5px 0 #703600;
+} */
+
+.home2 h4 {
+  position: relative;
+  padding: 1.5rem;
+  color:"#f4a460";
+  text-align: center;
+  background: #fff;
+  border-radius: 5px;
+}
+
+.home2 h4:before,
+.home2 h4:after {
+  position: absolute;
+  content: '';
+}
+
+.home2 h4:before {
+  top: -40px;
+  left: calc(50% - 40px);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.home2 h4:after {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
+
+.home2 h4 i {
+  /* font-size: 20px; */
+  font-size: 2rem;
+  line-height: 60px;
+  position: absolute;
+  z-index: 1;
+  top: -40px;
+  left: calc(50% - 40px);
+  width: 80px;
+  height: 60px;
+  text-align: center;
+  color :"#f4a460"
+}
+
+.home2 h4 span {
+  position: relative;
+  z-index: 1;
+}
+
+
+.home1 h5 {
+  position: relative;
+  padding: 1rem 2rem;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 10px 10px 10px;
+  background: #79a375;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+.home1 h5:before {
+  font-family: 'Font Awesome 5 Free';
+  font-size: 8px;
+  font-size: 1.2rem;
+  position: absolute;
+  padding:2px;
+  top: -24px;
+  left: 0;
+  height: 24px;
+  /* padding: 0 1em; */
+  content: '\f0a1    voice';
+  color: #fff;
+  border-radius: 10px 10px 0 0;
+  background: #79a375;
 }
