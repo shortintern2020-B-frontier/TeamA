@@ -1,7 +1,8 @@
 # Cookle
 
 ##  1. <a name='Overview'></a>Overview
-
+Cookle is the **Self-catering Support SNS** developed by team *BAR*. 
+This is development repository of it.
 
 ##  2. <a name='TableofContents'></a>Table of Contents
 <!-- vscode-markdown-toc -->
@@ -24,11 +25,23 @@
 * 2020/09/01: Create this repository
 * 2020/09/10: Finish development and deployed
 
-### TODO
-* [x] a
-* [x] a
-
 ##  4. <a name='QuickStart'></a>Quick Start
+Before run the code, you have to install some package and frameworks.
+Please refer the requirement.
+
+First, clone this repository.
+```bash
+$ git clone https://github.com/shortintern2020-B-frontier/TeamA.git
+```
+
+Then, run the flask server and react server.
+```bash
+$ python3 flask/main.py
+```
+```bash
+$ cd react-ts-app
+$ yarn start
+```
 
 ##  5. <a name='API'></a>API
 
@@ -37,6 +50,7 @@
 
 
 ##  7. <a name='DeveloperInformation'></a>Developer Information
+Maintainer: Team BAR
 
 ##  8. <a name='Citations'></a>Citations
 
@@ -45,15 +59,19 @@
 ##  10. <a name='CodeStructure'></a>Code Structure
 
 ##  11. <a name='Requirement'></a>Requirement
+* Flask
+* React.js
+* SQLite
 
 ##  12. <a name='Dependences'></a>Dependences
 
 ##  13. <a name='Installation'></a>Installation
 ```bash
-$ git clone 
+$ git clone https://github.com/shortintern2020-B-frontier/TeamA.git 
 ```
 
 ## Development Environment
+Google Cloud Platform
 
 ## Reference
 
