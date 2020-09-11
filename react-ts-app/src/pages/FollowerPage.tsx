@@ -1,3 +1,5 @@
+// Ohmura
+
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Container from '@material-ui/core/Container';
@@ -44,7 +46,7 @@ const FollowerPage: React.FC = () => {
     <Container maxWidth='xs'>
       <ErrorMessage message={errorMessage} />
       <div className="back_follow">
-      <h3 id="back_follow_3">{location.pathname === "/follower" ? "フォロされている" : "フォローしている"}ユーザー</h3>
+        <h3 id="back_follow_3">{location.pathname === "/follower" ? "フォロされている" : "フォローしている"}ユーザー</h3>
       </div>
       {
         location && myRelation ?

@@ -1,3 +1,5 @@
+// Niimi
+
 import React from "react";
 import { useHistory } from "react-router-dom";
 
@@ -25,7 +27,7 @@ const Home: React.FC = () => {
         <div className="home2">
           <h4><i className="far fa-lightbulb"></i><span>その悩み、Cookleで解決しよう！</span></h4>
           <p><img src={Panda} alt="image" /></p>
-          <Link style={{ color: 'red' }} onClick={() => history.push('/login')} className="btn"><span>サービスを使ってみる</span></Link>
+          <Link style={{ color: 'white' }} onClick={() => history.push('/login')} className="btn"><span>サービスを使ってみる</span></Link>
         </div>
       </div>
     </Container>

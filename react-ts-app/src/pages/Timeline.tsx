@@ -1,3 +1,5 @@
+// Ohmura
+
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
@@ -58,19 +60,19 @@ const Timeline: React.FC = () => {
 
   return (
     <Container maxWidth='xs'>
-        <h3 id="h3_timeline" className="animate__animated animate__fadeIn">Timeline</h3>
+      <h3 id="h3_timeline" className="animate__animated animate__fadeIn">Timeline</h3>
       <ErrorMessage message={errorMessage} />
       <div className="back_bonus">
         <p>ポイント2倍！！</p>
         <p><i className="fas fa-medal"></i>今日のボーナス料理：<a style={{ color: "#f4a460" }} href={`https://recipe.rakuten.co.jp/search/${bonus}`} >{bonus}</a></p>
       </div>
       <div className="items">
-      {
-        posts ?
-          <PhotoDisplay post_id={posts} />
-          : <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>
-      }
-      <hr />
+        {
+          posts ?
+            <PhotoDisplay post_id={posts} />
+            : <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>
+        }
+        <hr />
       </div>
       <p style={{ textAlign: 'center' }}>
         <LogoutButton onClick={onClick} />

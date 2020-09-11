@@ -1,3 +1,5 @@
+// Ohmura
+
 import React from "react";
 import { useLocation } from "react-router-dom";
 // import LensIcon from '@material-ui/icons/Lens';
@@ -43,7 +45,3 @@ const EarnBadge: React.FC<Props> = (props) => {
 }
 
 export default EarnBadge;
-
-// export default function App() {
-//   return <div></div>
-// }

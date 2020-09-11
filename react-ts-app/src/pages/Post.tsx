@@ -1,3 +1,5 @@
+// Ohmura
+
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
@@ -153,20 +155,23 @@ const Post: React.FC = () => {
                 rows={4}
                 variant="outlined"
                 fullWidth
+                required
               /></div>
             <div className="post_content">
               <TextField className={classes.textForm} fullWidth value={mealUrl} onChange={e => setMealUrl(e.target.value)} label="参考にしたレシピのURL（任意）" variant="outlined" />
             </div>
             <div className="post_content">
               <p>画像ファイルを選択してください</p>
-              <input type="file" onChange={e => {
-                let file = e.target.files![0];
-                let reader: FileReader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                  setImg(reader.result);
-                };
-              }} accept="image/*" />
+              <input type="file"
+                required
+                onChange={e => {
+                  let file = e.target.files![0];
+                  let reader: FileReader = new FileReader();
+                  reader.readAsDataURL(file);
+                  reader.onload = () => {
+                    setImg(reader.result);
+                  };
+                }} accept="image/*" />
             </div>
             <Button fullWidth variant="contained" type="submit" style={{ backgroundColor: "#f4a460" }}>
               投稿
