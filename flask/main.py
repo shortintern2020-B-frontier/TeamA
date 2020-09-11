@@ -11,6 +11,8 @@ from models.models import User, Meal_content, Cook_history, Point_user, Post, Us
 from models.database import db_session
 import datetime
 from urllib.request import urlopen
+import plotly.graph_objects as go
+import numpy as np
 
 app = Flask(__name__)
 # 文字化け防止
@@ -31,24 +33,9 @@ CORS(app)
 
 # Flask-JWT-extendedのセットアップ
 app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
-jwt = JWTManager(app)
-
 # 認証トークンの期限の有無
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = False
-
-#@app.after_request
-#def after_request(response):
-#  response.headers.add('Access-Control-Allow-Origin',"*")
-# #   response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-# #   response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-#  return response
-
-# @app.route('/')
-# @cross_origin()
-# def hello():
-#     name = "Hello World"
-#     return name
-
+jwt = JWTManager(app)
 
 # kajiura
 # dataはmodels.modelsの形式に合うように指定 ex) add_data() Meal_content("オムライス", 50)とか add_data(User("a.com", "A", "hoge", 3, 150)) とか add_data(Cook_history(100, 200)) とか！！
@@ -57,14 +44,8 @@ def add_data(data):
     db_session.commit()
 
 
-'''Authorization created by kudo, edited by masui 
-ユーザー認証が必要なページには@jwt_requiredを付けてください．
-get_user_id()関数でユーザーを取得できます．
-'''
-# def hash_password(password):
-#     hashed_pw = hashlib.md5(password.encode()).hexdigest()
-#     return hashed_pw
-# なんかhashlibがインストールできなかった
+
+# masui
 def hash_password(password):
     return password
 
@@ -99,18 +80,18 @@ def signup():
 def login():
     try:
         if not request.is_json:
-            return jsonify({"msg": "Missing JSON in request"}), 500
+            return jsonify({"msg": "Missing JSON in request"}), 401
 
         email = request.json.get('email', None)
         password = request.json.get('password', None)
         if not email:
-            return jsonify({"msg": "Missing email parameter"}), 500
+            return jsonify({"msg": "Missing email parameter"}), 401
         if not password:
-            return jsonify({"msg": "Missing password parameter"}), 500
+            return jsonify({"msg": "Missing password parameter"}), 401
 
         user = User.query.filter(User.email==email).first()
         if user == None or user.password != hash_password(password):
-            return jsonify({"msg": "Invalid email or password"}), 500
+            return jsonify({"msg": "Invalid email or password"}), 401
 
         # Identity can be any data that is json serializable
         access_token = create_access_token(identity=email)
@@ -119,13 +100,12 @@ def login():
         abort(404, {'code': 'Not found', 'message': str(e)})   
 
 # masui
-# identityがemailなのでuser_idに変換
 def get_user_id():
     current_user_email = get_jwt_identity()
     return User.query.filter(User.email==current_user_email).first().user_id
 
 # masui
-@app.route('/<user_id>/follow',methods=['POST'])
+@app.route('/<user_id>/follow',methods=['GET'])
 @jwt_required
 def follow_user(user_id=None):
     try:
@@ -150,7 +130,7 @@ def follow_user(user_id=None):
         abort(404, {'code': 'Not found', 'message': str(e)})
     
 # masui
-@app.route('/<user_id>/unfollow',methods=['POST'])
+@app.route('/<user_id>/unfollow',methods=['GET'])
 @jwt_required
 def unfollow_user(user_id=None):
     try:
@@ -180,19 +160,21 @@ def unfollow_user(user_id=None):
 def user_timeline():
     try:
         user_id = get_user_id()
-        #user_id = 2
+        # user_id = 4
 
         posts = []
         # Get own posts
         own_posts = Post.query.filter(Post.user_id==user_id).all()
+        name = User.query.filter(User.user_id==user_id).first().name
         for o in own_posts:
-            posts.append({'post_id':o.post_id,'user_id':user_id,'meal_url':o.recipe_url,'image_url':o.image_url,'create_at':o.create_at})
+            posts.append({'post_id':o.post_id,'user_id':user_id,'name':name,'meal_url':o.recipe_url,'image_url':o.image_url,'create_at':o.create_at})
         # Get followee's posts
         flwee_raw = User_relation.query.filter(User_relation.follower_id==user_id).all()
         for f in flwee_raw:
             f_posts = Post.query.filter(Post.user_id==f.followed_id).all()
+            f_name = User.query.filter(User.user_id==f.followed_id).first().name
             for f_p in f_posts:
-                posts.append({'post_id':f_p.post_id,'user_id':f.followed_id,'meal_url':f_p.recipe_url,'image_url':f_p.image_url,'create_at':f_p.create_at})
+                posts.append({'post_id':f_p.post_id,'user_id':f.followed_id,'name':f_name,'meal_url':f_p.recipe_url,'image_url':f_p.image_url,'create_at':f_p.create_at})
 
         posts.sort(key=lambda x: x['post_id'], reverse=True)   
 
@@ -209,6 +191,7 @@ def mypage_json():
         #user_id = 1
 
         # dbから取得
+        name = User.query.filter(User.user_id==user_id).first().name
         posts = []
         post_raw = Post.query.filter(Post.user_id==user_id).all()
         for p in post_raw:
@@ -227,19 +210,12 @@ def mypage_json():
         n_badge = User.query.filter(User.user_id==user_id).first().total_badges
         n_point = User.query.filter(User.user_id==user_id).first().total_points
 
-        return jsonify(post_id=posts, followers=n_flwer, followees=n_flwee, total_badge=n_badge, total_point=n_point)
+        return jsonify(name=name, post_id=posts, followers=n_flwer, followees=n_flwee, total_badge=n_badge, total_point=n_point)
     except Exception as e:
         abort(404, {'code': 'Not found', 'message': str(e)})
 
 
 # masui
-# QueryString ver.も一応
-#@app.route('/mypage',methods=['GET'])
-#@cross_origin()
-#def others_mypage_json():
-    # dbから取得
-    #user_id = request.args.get('user_id)
-# URLからダイレクトに取得
 @app.route('/<user_id>/mypage')
 def others_mypage_json(user_id=None):
     try:
@@ -251,6 +227,7 @@ def others_mypage_json(user_id=None):
         if User.query.filter(User.user_id==user_id).first() == None:
             return jsonify({"msg":"Invalid user_id"}), 404
 
+        name = User.query.filter(User.user_id==user_id).first().name
         post_raw = Post.query.filter(Post.user_id==user_id).all()
         for p in post_raw:
             posts.append({'post_id':p.post_id,'meal_url':p.recipe_url,'image_url':p.image_url})
@@ -267,7 +244,7 @@ def others_mypage_json(user_id=None):
         n_badge = User.query.filter(User.user_id==user_id).first().total_badges
         n_point = User.query.filter(User.user_id==user_id).first().total_points
 
-        return jsonify(post_id=posts, follwers=n_flwer, followees=n_flwee, total_badge=n_badge, total_point=n_point)
+        return jsonify(name=name,post_id=posts, follwers=n_flwer, followees=n_flwee, total_badge=n_badge, total_point=n_point)
     except Exception as e:
         abort(404, {'code': 'Not found', 'message': str(e)})
 
@@ -290,7 +267,7 @@ def relation_json():
         flwee_raw = User_relation.query.filter(User_relation.follower_id==user_id).all()
         for f in flwee_raw:
             user_name = User.query.filter(User.user_id==f.followed_id).first().name
-            flwer.append({'user_id':f.followed_id,'name':user_name})
+            flwee.append({'user_id':f.followed_id,'name':user_name})
 
         return jsonify(follower=flwer,followee=flwee)
     except Exception as e:
@@ -298,8 +275,8 @@ def relation_json():
 
 # masui
 @app.route('/<user_id>/relation', methods=['GET'])
-@jwt_required
-def other_relation_json():
+#@jwt_required
+def other_relation_json(user_id=None):
     try:
         user_id = int(user_id)
         #user_id = 1
@@ -315,7 +292,7 @@ def other_relation_json():
         flwee_raw = User_relation.query.filter(User_relation.follower_id==user_id).all()
         for f in flwee_raw:
             user_name = User.query.filter(User.user_id==f.followed_id).first().name
-            flwer.append({'user_id':f.followed_id,'name':user_name})
+            flwee.append({'user_id':f.followed_id,'name':user_name})
 
         return jsonify(follower=flwer,followee=flwee)
     except Exception as e:
@@ -327,17 +304,9 @@ def other_relation_json():
 def graph_status_json():
     user_id = get_user_id()
     #user_id = 1
+    graph_url="https://s3-ap-northeast-1.amazonaws.com/rakuten.intern2020/graph/{}".format(user_id)
 
-    point_list = Point_user.query.filter(Point_user.user_id==user_id).all()
-    
-    graph_dic = {}
-    # 同じ日に獲得したポイントは加算
-    for p in point_list:
-        graph_dic[p.get_date] = 0
-    for p in point_list:
-        graph_dic[p.get_date] += p.point
-
-    return jsonify(graph_dic)
+    return jsonify(graph_url=graph_url)
 
 #kimura
 @app.route('/post',methods=['POST'])
@@ -349,7 +318,7 @@ def upload():
         # 投稿のpostリクエストが来たらS3に画像を保存し、
         # データベースへの追記、更新を行う。
         user_id=get_user_id()
-        user_id=1
+        #user_id=1
         dt_now = datetime.datetime.now()
         payload = request.json
         # アップロードファイルを取得
@@ -377,14 +346,22 @@ def upload():
 
         #日付、日時を取ってくるget_date,created_at
         get_date=dt_now.strftime('%Y-%m-%d')
+        #ボーナス料理名を取ってくる
         created_at=dt_now.strftime('%Y-%m-%d %H:%M:%S')
+        date=int(dt_now.strftime('%d'))
+        bonus_id=date%15+1
+        bonus_name=Meal_content.query.filter(Meal_content.meal_id==bonus_id).all()[0].name
         #meal_nameの情報を元にデータベースからmeal_idとmeal_pointを取ってくる
         meal_id,meal_point=[],[]
         print(meal_name)
         for meal in meal_name:
-            meal_point.append(Meal_content.query.filter(Meal_content.name==meal).all()[0].point)
+            if meal==bonus_name:
+                meal_point.append(Meal_content.query.filter(Meal_content.name==meal).all()[0].point*2)
+            else:
+                meal_point.append(Meal_content.query.filter(Meal_content.name==meal).all()[0].point)
             meal_id.append(Meal_content.query.filter(Meal_content.name==meal).all()[0].meal_id)
-        for i in range(5-len(meal_id)):
+        meal_num=len(meal_id)
+        for i in range(5-meal_num):
             meal_id.append(None)
         #Point_userに送る為にpointの合計を計算する
         total_points=sum(meal_point)
@@ -394,7 +371,7 @@ def upload():
         # postidを取ってくる
         post_id=Meal_content.query.all()[-1].meal_id
         #cook_historyにmeal_id,user_id,post_id追記
-        for i in range(len(meal_id)):
+        for i in range(meal_num):
             add_data(Cook_history(meal_id[i],user_id,post_id))
         # userテーブルから現在のポイントを取ってくる+ポイントの上書き
         user = User.query.filter(User.user_id == user_id).first()
@@ -403,6 +380,102 @@ def upload():
 
         #point_userにuser_id,point,get_date追記
         add_data(Point_user(user_id,total_points,get_date))
+
+        ### masui
+        ### push users' graph
+        def push_graph():
+            point_list = Point_user.query.filter(Point_user.user_id==user_id).all()
+            graph_dic = {}
+            # 同じ日に獲得したポイントは加算
+            for p in point_list:
+                graph_dic[p.get_date] = 0
+            for p in point_list:
+                graph_dic[p.get_date] += p.point
+
+            # グラフ定義
+            graph_list = list(graph_dic.values())
+            for i in range(len(graph_list)-1):
+                graph_list[i+1] += graph_list[i]
+            xs = list(graph_dic.keys())
+            # グラフ描画
+            y_one = np.ones(len(xs))
+            d_l = 200
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=xs, y=d_l*y_one,
+                hoverinfo='x+y',
+                mode='lines',
+                line=dict(width=0.5, color='rgb(217, 217, 217)'),
+                stackgroup='one'
+            ))
+            fig.add_trace(go.Scatter(
+                x=xs, y=d_l*y_one,
+                hoverinfo='x+y',
+                mode='lines',
+                line=dict(width=0.5, color='rgb(217, 197, 178)'),
+                stackgroup='one'
+            ))
+            fig.add_trace(go.Scatter(
+                x=xs, y=d_l*y_one,
+                hoverinfo='x+y',
+                mode='lines',
+                line=dict(width=0.5, color='rgb(178, 217, 178)'),
+                stackgroup='one' 
+            ))
+            fig.add_trace(go.Scatter(
+                x=xs, y=d_l*y_one,
+                hoverinfo='x+y',
+                mode='lines',
+                line=dict(width=0.5, color='rgb(178, 236, 236)'),
+                stackgroup='one' 
+            ))
+
+            fig.add_trace(go.Scatter(
+                x=xs, y=d_l*y_one,
+                hoverinfo='x+y',
+                mode='lines',
+                line=dict(width=0.5, color='rgb(236, 236, 178)'),
+                stackgroup='one' 
+            ))
+            fig.add_trace(go.Scatter(
+                x=xs, y=d_l*y_one,
+                hoverinfo='x+y',
+                mode='lines',
+                line=dict(width=0.5, color='rgb(255, 217, 178)'),
+                stackgroup='one' 
+            ))
+            fig.add_trace(go.Scatter(
+                x=xs, y=d_l*y_one,
+                hoverinfo='x+y',
+                mode='lines',
+                line=dict(width=0.5, color='rgb(255, 178, 178)'),
+                stackgroup='one' 
+            ))
+            fig.add_trace(go.Scatter(
+                x=xs, y=graph_list,
+                name="point",
+                line=dict(color='rgb(3,16,252)')
+            ))
+
+            # 現状はグラフのy軸最大を1400固定
+            fig.update_layout(
+                showlegend=False,
+                #yaxis_range=(0,graph_list[-1]+100),
+                yaxis_range=(0,1400),
+                xaxis_range=(xs[0],xs[-1])
+            )
+
+            fig.write_html("point_graph.html")
+
+            with open("point_graph.html",'rb') as f:
+                # S3アップロード処理
+                ##アップロード先URL{https://s3-ap-northeast-1.amazonaws.com/rakuten.intern2020/graph/{user_id}}
+                s3 = boto3.resource('s3')
+                response = s3.Bucket('rakuten.intern2020').put_object(Key="graph/{}".format(user_id), Body=f,ContentType="text/html")
+                #URL生成
+
+        push_graph()
+
         print("バッチ処理開始")
         # return jsonify(status=0, message=''), 200
 
@@ -476,7 +549,11 @@ def return_meal_name():
             'meal_name' : Meal_content.query.all()[i].name
         }
         meal_name_list.append(name_json)
-    return jsonify(results = meal_name_list)
+    dt_now = datetime.datetime.now()
+    date=int(dt_now.strftime('%d'))
+    bonus_id=date%15+1
+    bonus_name=Meal_content.query.filter(Meal_content.meal_id==bonus_id).all()[0].name
+    return jsonify(results = meal_name_list, bonus=bonus_name)
 
 # niimi
 # 役割：料理検索
@@ -512,6 +589,7 @@ def search_meal():
     except Exception as e:
         abort(404, {'code': 'Not found', 'message': str(e)})
 
+# niimi
 @app.route('/search/user', methods=['POST'])
 # @jwt_required
 def search_user():
@@ -530,17 +608,10 @@ def search_user():
         abort(404, {'code': 'Not found', 'message': str(e)})
 
 
-
-
+# kajiura
 # stage2-4 ステータスページ
-'''
-#テスト用
-from models.models import User, Meal_content, Cook_history, Point_user, Post, User_relation, Badges
-from models.database import db_session
-'''
 @app.route('/badge-status', methods=['GET'])
 @jwt_required
-# kajiura
 def badge_status_json():
     try:
         # user_idを指定してmeal_idとmeal_nameとlevelを返す
@@ -864,30 +935,7 @@ def weekly_meal_ranking_json():
         abort(404, {'code': 'Not found', 'message': str(e)})
 
 
-# # 関数のテスト
-# # curl http://localhost:5023/test -X POST -H "Content-Type: application/json" --data '{"name": 5}'
-# @app.route('/test', methods=['POST'])
-# @cross_origin()
-# # def test2():
-# #     return 'テストだよ！'
-# def def_test():
-
-#     def test2():
-#         return 'テストだよ！'
-
-#     # jsonリクエストから値取得
-#     payload = request.json
-#     name = payload.get('name')
-#     test_message = '反映できてない'
-#     test_message = test2()
-#     return jsonify({'name': test_message})
-
-# # GETのテスト
-# @app.route('/test', methods=['GET'])
-# @cross_origin()
-# def test():
-#     return jsonify({'name': 'test'})
-
+# niimi
 # POSTのテスト
 @app.route('/test-post', methods=['POST'])
 @cross_origin(support_credentials=True)
@@ -917,5 +965,5 @@ def error_handler(error):
 
 ## おまじない
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True,host="0.0.0.0")
     # app.run(debug=True, host="localhost", port=5001)
