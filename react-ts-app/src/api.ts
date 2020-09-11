@@ -1,4 +1,5 @@
 // Kudo
+// Kajiura -> getFolloweeTotalBadgeRanking, getTotalPointRanking, getFolloweeTotalPointRanking, getMonthlyPointRanking, getFolloweeMonthlyPointRanking, getWeeklyMealRanking
 
 const baseUrl = `http://34.122.26.70:5000`
 
