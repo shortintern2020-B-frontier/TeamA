@@ -167,19 +167,25 @@ p{
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
 }
-/* 
- .back_bonus a:link{
-  color: #0000FF;
+
+.back_bonus a{
+  background-color: white;
+  padding: 5px;
+  text-decoration:none;
+  border-radius: 15px;
+}
+/* .back_bonus a:link{
+  color: #fff;
 }
 .back_bonus a:visited{
-  color: #00BFFF;
+  color: #fff;
 } */
 /* .back_bonus a:hover{
-  color: #ffa806;
+  color: #fff;
+}
+.back_bonus a:active{
+  color: #fff;
 } */
-/* .back_bonus a:active{
-  color: #FF4500;
-}  */
 
 .items{
   padding:20px;

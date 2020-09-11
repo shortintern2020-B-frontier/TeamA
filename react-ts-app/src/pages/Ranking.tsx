@@ -1,3 +1,5 @@
+// Kudo & Kajiura
+
 import React, { useEffect, useState } from "react";
 import MDSpinner from 'react-md-spinner';
 
@@ -155,13 +157,13 @@ const Home: React.FC = () => {
         </div>
         <div hidden={rankingType !== "Total Meal Ranking"}>
           <Paper className={classes.paper}>
-            <Typography component="h4" variant="h6"><div id="service">Total Meal Ranking</div></Typography>
+            <Typography component="h4" variant="h6"><div id="service">Total Dish Ranking</div></Typography>
             {mealList[0] ? <MealLists mealLists={mealList} /> : <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>}
           </Paper>
         </div>
         <div hidden={rankingType !== "Weekly Meal Ranking"}>
           <Paper className={classes.paper}>
-            <Typography component="h4" variant="h6"><div id="service">Weekly Meal Ranking</div></Typography>
+            <Typography component="h4" variant="h6"><div id="service">Weekly Dish Ranking</div></Typography>
             {weeklyMealList[0] ? <MealLists mealLists={mealList} /> : <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>}
           </Paper>
         </div>
