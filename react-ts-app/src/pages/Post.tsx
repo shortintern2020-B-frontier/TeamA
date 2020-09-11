@@ -97,7 +97,6 @@ const Post: React.FC = () => {
     }
 
     const jwtToken: any = await asyncLocalStorage.getItem("access_token").catch(err => console.log(err))
-    console.log(jwtToken);
     await createPost(jwtToken, curPost)
       .then(res => {
         const badges = res.get_badges;

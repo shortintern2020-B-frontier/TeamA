@@ -191,7 +191,7 @@ const NavBar: React.FC = () => {
               <CameraAltIcon />
             </IconButton>
             <IconButton className={classes.rightIcon} color="inherit" onClick={() => history.push("/mystatus")}>
-              <LensIcon />
+              <i className="fas fa-medal" />
             </IconButton>
             <IconButton className={classes.rightIcon} color="inherit" onClick={() => history.push("/mypage")}>
               <PersonIcon />
