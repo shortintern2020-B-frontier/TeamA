@@ -1,3 +1,5 @@
+// Ohmura
+
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom"
 
@@ -60,7 +62,9 @@ export default function BasicTextFields() {
         asyncLocalStorage.setItem("access_token", res.access_token)
         history.push("/timeline")
       })
-      .catch(err => { setErrorMessage(err.message) })
+      .catch(err => {
+        setErrorMessage(err.message);
+      })
   }
 
   return (

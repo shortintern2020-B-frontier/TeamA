@@ -1,3 +1,5 @@
+// Ohmura & Kudo
+
 import React from 'react';
 import {
   BrowserRouter as Router,
@@ -25,11 +27,12 @@ import OtherUserFollower from "./pages/OtherUserFollower"
 
 import './css/index.css'
 
-const App: React.FC = () => {
+const App: React.FC = (props) => {
   return (
     <>
       <Router>
         <Header />
+        <div style={{ height: 50 }} />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/mypage" component={MyPage} />

@@ -45,7 +45,7 @@ const FollowerPage: React.FC = () => {
   return (
     <Container maxWidth='xs'>
       <ErrorMessage message={errorMessage} />
-      <h3>{location.pathname === "/follower" ? "フォロされている" : "フォローしている"}ユーザー</h3>
+      <h3>{location.pathname.match(/\/\d+\/follower/u) ? "フォロされている" : "フォローしている"}ユーザー</h3>
       {
         location && relation ?
           <UserList users={location.pathname.match(/\/\d+\/follower/u) ? relation?.follower : relation.followee} /> :

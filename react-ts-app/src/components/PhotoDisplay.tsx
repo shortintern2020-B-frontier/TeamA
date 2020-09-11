@@ -1,3 +1,5 @@
+// Ohmura
+
 import React from 'react'
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -27,7 +29,8 @@ const useStyles = makeStyles({
   image: {
     width: "170px",
     height: "170px",
-    objectFit: "cover"
+    objectFit: "cover",
+    borderRadius: 10
   }
 })
 
