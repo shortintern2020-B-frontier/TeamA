@@ -1,3 +1,5 @@
+// Ohmura
+
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
@@ -15,6 +17,7 @@ import LogoutButton from '../components/LogoutButton'
 interface Post {
   post_id: number;
   user_id: number;
+  name?: string;
   image_url: string;
   create_at: string;
 }
@@ -23,6 +26,7 @@ interface Post {
 const Timeline: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>();
   const [mealName, setMealName] = useState([{ meal_name: "" }]);
+  const [bonus, setBonus] = useState("")
   const [errorMessage, setErrorMessage] = useState("");
   useLoginRedirect()
   const history = useHistory();
@@ -32,13 +36,15 @@ const Timeline: React.FC = () => {
       await getTimeline(jwtToken)
         .then(res => {
           setPosts(res.results);
+
         })
         .catch((err) => {
           setErrorMessage(err.message);
         });
       await getMealName()
         .then(res => {
-          setMealName(res.results)
+          setMealName(res.results);
+          setBonus(res.bonus);
         })
         .catch((err) => {
           setErrorMessage(err.message);
@@ -47,16 +53,6 @@ const Timeline: React.FC = () => {
     f()
   }, [])
 
-  // const handleMealSearch = async () => {
-  //   await mealSearch({ meal_name: searchKey })
-  //     .then(res => {
-  //       console.log(res)
-  //     })
-  //     .catch(err => {
-  //       setErrorMessage(err.message);
-  //     });
-  // }
-
   const onClick = () => {
     asyncLocalStorage.removeItem('access_token')
     history.push('/')
@@ -64,16 +60,20 @@ const Timeline: React.FC = () => {
 
   return (
     <Container maxWidth='xs'>
-      <div className="back_timeline">
-        <h3 id="h3_timeline">Timeline</h3>
-      </div>
+      <h3 id="h3_timeline" className="animate__animated animate__fadeIn">Timeline</h3>
       <ErrorMessage message={errorMessage} />
-      {
-        posts ?
-          <PhotoDisplay post_id={posts} />
-          : <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>
-      }
-      <hr />
+      <div className="back_bonus">
+        <p>ポイント2倍！！</p>
+        <p><i className="fas fa-medal"></i>今日のボーナス料理：<a style={{ color: "#f4a460" }} href={`https://recipe.rakuten.co.jp/search/${bonus}`} >{bonus}</a></p>
+      </div>
+      <div className="items">
+        {
+          posts ?
+            <PhotoDisplay post_id={posts} />
+            : <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>
+        }
+        <hr />
+      </div>
       <p style={{ textAlign: 'center' }}>
         <LogoutButton onClick={onClick} />
       </p>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Container from '@material-ui/core/Container';
 import MDSpinner from 'react-md-spinner';
-import { getMyRelation } from "../api"
+import { getOtherRelation } from "../api"
 import { asyncLocalStorage } from "../utils"
 import useLoginRedirect from '../hooks/useLoginRedirect'
 import ErrorMessage from './../components/ErrorMessage'
@@ -21,16 +21,18 @@ interface Relation {
 }
 
 const FollowerPage: React.FC = () => {
-  const [myRelation, setMyRelation] = useState<Relation>();
+  const [relation, setRelation] = useState<Relation>();
   const [errorMessage, setErrorMessage] = useState("");
   const location = useLocation();
+  const user_id = location.pathname.match(/\/([0-9]+)\/followe[er]/u)![1];
+
   useLoginRedirect()
   useEffect(() => {
     const f = async () => {
       const jwtToken: any = await asyncLocalStorage.getItem("access_token").catch(err => console.log(err))
-      await getMyRelation(jwtToken)
+      await getOtherRelation(jwtToken, user_id)
         .then(res => {
-          setMyRelation(res)
+          setRelation(res)
         })
         .catch((err) => {
           setErrorMessage(err.message);
@@ -39,18 +41,16 @@ const FollowerPage: React.FC = () => {
     f()
   }, [])
 
-  console.log(myRelation)
+  console.log(relation)
 
 
   return (
     <Container maxWidth='xs'>
       <ErrorMessage message={errorMessage} />
-      <div className="back_follow">
-        <h3 id="back_follow_3">{location.pathname === "/follower" ? "フォロされている" : "フォローしている"}ユーザー</h3>
-      </div>
+      <h3>{location.pathname.match(/\/\d+\/follower/u) ? "フォロされている" : "フォローしている"}ユーザー</h3>
       {
-        location && myRelation ?
-          <UserList users={location.pathname === "/follower" ? myRelation?.follower : myRelation.followee} /> :
+        location && relation ?
+          <UserList users={location.pathname.match(/\/\d+\/follower/u) ? relation?.follower : relation.followee} /> :
           <p style={{ textAlign: 'center' }}><MDSpinner size={56} /></p>
       }
 

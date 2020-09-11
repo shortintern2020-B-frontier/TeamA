@@ -1,3 +1,5 @@
+// Kudo
+
 import React from 'react';
 
 import Link from "@material-ui/core/Link"
@@ -15,7 +17,7 @@ const MealList: React.FC<Props> = (props) => {
 
   return (
     <TableRow key={meal_id}>
-      <TableCell><Link href={"https://recipe.rakuten.co.jp/search/" + meal_name}>{meal_name}</Link></TableCell>
+      <TableCell><Link style={{ color: '#f4a460' }} href={"https://recipe.rakuten.co.jp/search/" + meal_name}>{meal_name}</Link></TableCell>
       <TableCell>{count}</TableCell>
     </TableRow>
   )

@@ -1,4 +1,5 @@
-/* eslint-disable no-use-before-define */
+// Ohmura
+
 import React from 'react';
 
 import TextField from '@material-ui/core/TextField';
@@ -71,18 +72,18 @@ const Search: React.FC<Props> = (props) => {
             props.onChange(newValue);
           }
         }}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params) as OptionType[];
+        // filterOptions={(options, params) => {
+        //   const filtered = filter(options, params) as OptionType[];
 
-          if (params.inputValue !== '') {
-            filtered.push({
-              inputValue: params.inputValue,
-              meal_name: `Add "${params.inputValue}"`,
-            });
-          }
+        //   if (params.inputValue !== '') {
+        //     filtered.push({
+        //       inputValue: params.inputValue,
+        //       meal_name: `Add "${params.inputValue}"`,
+        //     });
+        //   }
 
-          return filtered;
-        }}
+        //   return filtered;
+        // }}
         options={option}
         getOptionLabel={(option) => {
           // e.g value selected with enter, right from the input

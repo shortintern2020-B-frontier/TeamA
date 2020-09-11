@@ -1,3 +1,5 @@
+// Ohmura
+
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom'
 
@@ -12,6 +14,17 @@ import { signup } from "../api"
 
 const useStyles = makeStyles((theme: Theme) =>
   ({
+    textForm: {
+      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: "orange"
+      },
+      "& .MuiInputLabel-outlined.Mui-focused": {
+        color: "orange"
+      },
+      backgroundColor: '#fff',
+      height: 'auto',
+      borderRadius: '5px',
+    },
     paper: {
       marginTop: theme.spacing(8),
       display: 'flex',
@@ -24,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     submit: {
       margin: theme.spacing(3, 0, 2),
+      background: 'orange'
     },
   }),
 );
@@ -60,9 +74,10 @@ export default function BasicTextFields() {
           <ErrorMessage message={errorMessage} />
           <form className={classes.form} noValidate autoComplete="off">
             <TextField
+              className={classes.textForm}
               variant="outlined"
               margin="normal"
-              className='login_form'
+              // className='login_form'
               fullWidth
               label="Username"
               required
@@ -70,18 +85,21 @@ export default function BasicTextFields() {
             />
             <TextField
               variant="outlined"
-              className='login_form'
+              className={classes.textForm}
+              // className='login_form'
               margin="normal"
               fullWidth
               label="Email"
               required
               onChange={(event) => setEmail(event.target.value)}
             />
-            <TextField variant="outlined"
+            <TextField
+              variant="outlined"
+              className={classes.textForm}
               margin="normal"
               fullWidth
               label="Password"
-              className='login_form'
+              // className='login_form'
               type="password"
               required
               onChange={(event) => setPassword(event.target.value)}

@@ -1,3 +1,5 @@
+// Ohmura
+
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import MDSpinner from 'react-md-spinner';
@@ -21,7 +23,7 @@ const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
   const path = useLocation().pathname;
-  const user_id = path.split("/")[1];
+  const user_id = path.match(/\/([0-9]+)\/status/u)![1];
   useLoginRedirect()
 
   useEffect(() => {

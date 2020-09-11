@@ -1,14 +1,16 @@
-const baseUrl = `http://localhost:5000`
+// Kudo
+
+const baseUrl = `http://34.122.26.70:5000`
 
 const toJson = async (res: Response) => {
   if (res.status === 404) {
     throw new Error('Not Found');
   }
   if (res.status >= 500) {
-    return new Error("Internal Server Error")
+    throw new Error("Internal Server Error")
   }
   if (res.status === 401) {
-    return new Error("Unauthorized")
+    throw new Error("Unauthorized")
   }
   // no-cors: type opaque
   // if (res.status === 0) {
@@ -103,6 +105,14 @@ export const getMyRelation = async (jwtToken: string) => {
   return await toJson(resp);
 }
 
+export const getOtherRelation = async (jwtToken: string, user_id: string) => {
+  const resp = await fetch(`${baseUrl}/${user_id}/relation`, {
+    method: "GET",
+    // credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}
+
 export const createPost = async <T>(jwtToken: string, body: T) => {
   const resp = await fetch(`${baseUrl}/post`, {
     method: "POST",
@@ -130,6 +140,66 @@ export const getMealName = async () => {
 
 export const getTotalBadgeRanking = async (jwtToken: string) => {
   const resp = await fetch(`${baseUrl}/total-badge-ranking`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+      'Content-Type': "application/json",
+    }),
+    credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}
+
+export const getFolloweeTotalBadgeRanking = async (jwtToken: string) => {
+  const resp = await fetch(`${baseUrl}/followee-total-badge-ranking`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+      'Content-Type': "application/json",
+    }),
+    credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}
+
+export const getTotalPointRanking = async (jwtToken: string) => {
+  const resp = await fetch(`${baseUrl}/total-point-ranking`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+      'Content-Type': "application/json",
+    }),
+    credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}
+
+export const getFolloweeTotalPointRanking = async (jwtToken: string) => {
+  const resp = await fetch(`${baseUrl}/followee-total-point-ranking`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+      'Content-Type': "application/json",
+    }),
+    credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}
+
+export const getMonthlyPointRanking = async (jwtToken: string) => {
+  const resp = await fetch(`${baseUrl}/monthly-point-ranking`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+      'Content-Type': "application/json",
+    }),
+    credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}
+
+export const getFolloweeMonthlyPointRanking = async (jwtToken: string) => {
+  const resp = await fetch(`${baseUrl}/followee-monthly-point-ranking`, {
     method: "GET",
     headers: new Headers({
       Authorization: `Bearer ${jwtToken}`,
@@ -209,3 +279,36 @@ export const mealSearch = async <T>(body: T) => {
 
   return await toJson(resp);
 };
+
+export const getMyGraph = async (jwtToken: string) => {
+  const resp = await fetch(`${baseUrl}/graph_status`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    }),
+    credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}
+
+export const follow = async (jwtToken: string, user_id: string) => {
+  const resp = await fetch(`${baseUrl}/${user_id}/follow`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    }),
+    credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}
+
+export const unfollow = async (jwtToken: string, user_id: string) => {
+  const resp = await fetch(`${baseUrl}/${user_id}/unfollow`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: `Bearer ${jwtToken}`,
+    }),
+    credentials: 'same-origin'
+  });
+  return await toJson(resp);
+}

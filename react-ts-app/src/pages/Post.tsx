@@ -1,8 +1,9 @@
+// Ohmura
+
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import { createStyles, makeStyles, TextField, Checkbox, FormControl, FormLabel, FormGroup, FormControlLabel, Theme } from '@material-ui/core';
-import SendIcon from '@material-ui/icons/Send';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -14,10 +15,19 @@ import EarnBadge from "./EarnBadge"
 import ErrorMessage from './../components/ErrorMessage'
 
 
-console.log(getMealName())
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    textForm: {
+      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: "orange"
+      },
+      "& .MuiInputLabel-outlined.Mui-focused": {
+        color: "orange"
+      },
+      backgroundColor: '#fff',
+      height: 'auto',
+      borderRadius: '5px',
+    },
     paper: {
       position: 'absolute',
       width: "100%",
@@ -39,6 +49,11 @@ interface BadgeType {
   badge_level: number;
 }
 
+interface MealType {
+  meal_name: string;
+  meal_id?: number;
+}
+
 
 const Post: React.FC = () => {
   const [checked, setChecked] = useState<string[]>([]);
@@ -48,7 +63,8 @@ const Post: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [badges, setBadges] = useState<BadgeType[]>();
-  const [mealName, setMealName] = useState([{ meal_name: "" }]);
+  const [mealName, setMealName] = useState<MealType[]>();
+  const [bonus, setBonus] = useState("");
   useLoginRedirect()
   const history = useHistory()
   const classes = useStyles();
@@ -57,7 +73,8 @@ const Post: React.FC = () => {
     const f = async () => {
       await getMealName()
         .then(res => {
-          setMealName(res.results)
+          setMealName(res.results);
+          setBonus(res.bonus);
         })
         .catch((err) => {
           setErrorMessage(err.message);
@@ -80,7 +97,6 @@ const Post: React.FC = () => {
     }
 
     const jwtToken: any = await asyncLocalStorage.getItem("access_token").catch(err => console.log(err))
-    console.log(jwtToken);
     await createPost(jwtToken, curPost)
       .then(res => {
         const badges = res.get_badges;
@@ -114,47 +130,50 @@ const Post: React.FC = () => {
       <div style={{ textAlign: "center" }}>
         <ErrorMessage message={errorMessage} />
         <div className="back_post">
-          <h3 id="h3_back">Post Your Meal</h3>
+          <h3 id="h3_back" className="animate__animated animate__jello">Post Your Meal</h3>
         </div>
-        <div className="post_form">
+        <div className="post_form">"
           <form onSubmit={onSubmit}>
             <div className="post_content">
               <FormControl required>
                 <FormLabel><p>料理を選択してください（最大5つ）</p></FormLabel>
                 <FormGroup row onChange={(e) => handleCheck((e.target as HTMLInputElement).value)}>
                   {mealName ? mealName.map((item, index) => {
-                    return <FormControlLabel label={item.meal_name} value={item.meal_name} key={index} control={<Checkbox />} />
+                    return <FormControlLabel label={item.meal_name} value={item.meal_name} key={index} control={<Checkbox style={{ color: 'orange' }} />} />
                   }) : ""}
                 </FormGroup>
               </FormControl>
             </div>
             <div className="post_content">
               <TextField
+                className={classes.textForm}
                 value={comment}
                 onChange={e => setComment(e.target.value)}
                 label="コメント"
-                className="form_inside"
                 multiline
                 rows={4}
                 variant="outlined"
                 fullWidth
+                required
               /></div>
             <div className="post_content">
-              <TextField fullWidth value={mealUrl} onChange={e => setMealUrl(e.target.value)} label="参考にしたレシピのURL（任意）" className="form_inside" variant="outlined" />
+              <TextField className={classes.textForm} fullWidth value={mealUrl} onChange={e => setMealUrl(e.target.value)} label="参考にしたレシピのURL（任意）" variant="outlined" />
             </div>
             <div className="post_content">
               <p>画像ファイルを選択してください</p>
-              <input type="file" onChange={e => {
-                let file = e.target.files![0];
-                let reader: FileReader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                  setImg(reader.result);
-                };
-              }} accept="image/*" />
+              <input type="file"
+                required
+                onChange={e => {
+                  let file = e.target.files![0];
+                  let reader: FileReader = new FileReader();
+                  reader.readAsDataURL(file);
+                  reader.onload = () => {
+                    setImg(reader.result);
+                  };
+                }} accept="image/*" />
             </div>
             <Button fullWidth variant="contained" type="submit" style={{ backgroundColor: "#f4a460" }}>
-              登録
+              投稿
           </Button>
           </form>
         </div>
@@ -183,7 +202,6 @@ const Post: React.FC = () => {
           </div>
         </Modal>
       </div >
-      {/* <button onClick={() => setIsOpen(!isOpen)}>aaa</button> */}
     </Container>
   )
 }
