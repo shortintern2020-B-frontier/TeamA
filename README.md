@@ -24,6 +24,7 @@ This is development repository of it.
 ##  3. <a name='Status'></a>Status
 * 2020/09/01: Create this repository
 * 2020/09/10: Finish development and deployed
+* 2020/09/11: Release v1.0.0
 
 ##  4. <a name='QuickStart'></a>Quick Start
 Before run the code, you have to install some packages and frameworks.
@@ -43,6 +44,10 @@ $ cd react-ts-app
 $ yarn start
 ```
 
+You can access lp by following address.
+```bash
+$ localhost:3000
+```
 ##  5. <a name='API'></a>API
 
 
