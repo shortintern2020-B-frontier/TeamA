@@ -57,7 +57,7 @@ const Home: React.FC = () => {
   return (
     <Container maxWidth="xs">
       <div className="back_mypage">
-        <h3 id="h3_back">My Photos</h3>
+        <h3 id="h3_back" className="animate__animated animate__jello">My Photos</h3>
       </div>
       <ErrorMessage message={errorMessage} />
       <h3>{userInfo ? userInfo.name : ""}</h3>

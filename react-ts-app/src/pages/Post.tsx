@@ -129,9 +129,9 @@ const Post: React.FC = () => {
       <div style={{ textAlign: "center" }}>
         <ErrorMessage message={errorMessage} />
         <div className="back_post">
-          <h3 id="h3_back">Post Your Meal</h3>
+          <h3 id="h3_back" className="animate__animated animate__jello">Post Your Meal</h3>
         </div>
-        <div className="post_form">
+        <div className="post_form">"
           <form onSubmit={onSubmit}>
             <div className="post_content">
               <FormControl required>
@@ -169,7 +169,7 @@ const Post: React.FC = () => {
               }} accept="image/*" />
             </div>
             <Button fullWidth variant="contained" type="submit" style={{ backgroundColor: "#f4a460" }}>
-              登録
+              投稿
           </Button>
           </form>
         </div>

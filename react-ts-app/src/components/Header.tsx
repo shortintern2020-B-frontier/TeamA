@@ -1,3 +1,5 @@
+// Ohmura
+
 import React from 'react';
 import { Link, useHistory } from "react-router-dom"
 
@@ -171,11 +173,11 @@ const NavBar: React.FC = () => {
   );
 
   return (
-    <div className={classes.grow}>
+    <div className={classes.grow} style={{ position: "fixed", top: 0, left: 0, width: "100%", zIndex: 100 }}>
       <AppBar position="static" style={{ background: '#f4a460' }}>
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap onClick={() => history.push("/timeline")}>
-            Cookle
+            <div id="service">Cookle</div>
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>

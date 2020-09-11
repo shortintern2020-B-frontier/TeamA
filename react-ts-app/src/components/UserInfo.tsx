@@ -38,7 +38,7 @@ const UserInfo: React.FC<Props> = (props) => {
       <Link className={classes.link} href={userId ? `/${userId}/status` : "/mystatus"}>
         <Badge className={classes.badge} badgeContent={totalBadge} showZero max={100000} color="secondary">バッジ</Badge>
       </Link>
-      <Link className={classes.link} href={userId ? `/${userId}/status` : "/mystatus"}>
+      <Link className={classes.link} href={userId ? `/${userId}/status#point` : "/mystatus"}>
         <Badge className={classes.badge} badgeContent={totalPoint} showZero max={100000} color="secondary">ポイント</Badge>
       </Link>
     </div>
